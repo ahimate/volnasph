@@ -1,0 +1,17 @@
+0.06
+3.5
+998.29
+3
+0.04
+21
+21
+
+
+
+	//double Particle::fluM=0.06; // ìàññà
+	//double Particle::fluNu=3.5; //êîýô âÿçêîñòè
+	//double Particle::fluROO=998.29; //íà÷àëüíàÿ ïëîòíîñòü
+	//double Particle::fluK=3; //êîýô â óðàâí ñîñòîÿíèÿ
+	//double Particle::wallM=0.04; 
+grid x
+grid y
