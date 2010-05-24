@@ -5,6 +5,8 @@
 #include <string>
 #include <fstream> 
 #include <map>
+#include <stdio.h>
+#include <stdlib.h>
 #include "Particle.h"
 #include "Bucket.h"
 
@@ -21,7 +23,7 @@ int gridXstep, gridYstep;
 double** wall;//под батиметрию-высоты частиц склона/////////////
 double** flu;//////////////////////////////////////
 int filename_count = 5;
-double timestep = 0.01;
+double timestep = 0.1;
 int kolvotimestep = 10;
 
 ///Bucket
@@ -64,7 +66,7 @@ int kodir(double x, double y, double z)//c нуля,а количество с 1
 	}
 }
 
-void outputData(map<int, Bucket>& mapama, char* outname) {
+void outputData(map<int, Bucket>& mapama,const char* outname) {
 	ofstream out(outname);
 	for (map<int, Bucket>::iterator it = mapama.begin(); it != mapama.end(); it++) {
 		(*it).second.BucketInFile(out);
@@ -98,7 +100,7 @@ void outputDataP(map<int, Bucket>& mapama, char* outname) {
 	cout << "create " << outname << endl;
 }
 
-void outputFluData(map<int, Bucket>& mapama, char* outname) {
+void outputFluData(map<int, Bucket>& mapama, const char* outname) {
 	ofstream out(outname);
 	for (map<int, Bucket>::iterator it = mapama.begin(); it != mapama.end(); it++) {
 		if ((*it).second.status == 0) {
@@ -365,12 +367,12 @@ void BucketStep(double t) {
 				}
 			}
 			(*it).second.part[i].cRo = tmp1;
-//			cout << tmp1 << " ";
-//			if (tmp1 <= epsil) {
-//				cout << "Ro==0: " << i;
-//				int tmp11;
-//				cin >> tmp11;
-//			}
+			//			cout << tmp1 << " ";
+			//			if (tmp1 <= epsil) {
+			//				cout << "Ro==0: " << i;
+			//				int tmp11;
+			//				cin >> tmp11;
+			//			}
 			//cout<<tmp1<<"  ";
 			if ((*it).second.part[i].type == 1) {
 				(*it).second.part[i].cP = fluPmain + (*it).second.part[i].fluK
@@ -446,7 +448,7 @@ int main(int argc, char** argv) {
 	//	outputDataVel(mapa,"vel000.txt");
 	//	outputDataRo(mapa,"ro000.txt");
 
-	outputFluData(mapa, "Flu_000.txt");
+	//	outputFluData(mapa, "Flu_000.txt");
 	//	outputFluDataVel(mapa,"Flu_vel000.txt");
 	//	outputFluDataRo(mapa,"Flu_ro000.txt");
 	for (int t = 1; t <= kolvotimestep; t++) {
@@ -458,11 +460,16 @@ int main(int argc, char** argv) {
 		//		outputDataVel(mapa_new,"vel001.txt");
 		//		outputDataRo(mapa_new,"ro001.txt");
 		//		outputDataP(mapa_new,"p001.txt");
-
-		//		outputFluData(mapa_new,"Flu_001.txt");
+		string fileName = "Flu_";
+		char numFile[5];
+		sprintf(numFile,"%d",t);
+		fileName.append(numFile);
+		fileName.append(".txt");
+		outputData(mapa_new,fileName.c_str());
+//		outputFluData(mapa_new, fileName.c_str());
 		//		outputFluDataVel(mapa_new,"Flu_vel001.txt");
-		outputFluDataRo(mapa_new, "Flu_ro001.txt");
-		outputFluDataP(mapa_new, "Flu_p001.txt");
+		//		outputFluDataRo(mapa_new, "Flu_ro001.txt");
+		//		outputFluDataP(mapa_new, "Flu_p001.txt");
 	}
 	cout << "Enter" << endl;
 	return 0;
