@@ -22,7 +22,7 @@ double** wall;//под батиметрию-высоты частиц склон
 double** flu;//////////////////////////////////////
 int filename_count = 5;
 double timestep = 0.01;
-int kolvotimestep = 1;
+int kolvotimestep = 10;
 
 ///Bucket
 double bucRadius; // радиус ячейки
@@ -64,7 +64,7 @@ int kodir(double x, double y, double z)//c нуля,а количество с 1
 	}
 }
 
-void outputData(map<int, Bucket> mapama, char* outname) {
+void outputData(map<int, Bucket>& mapama, char* outname) {
 	ofstream out(outname);
 	for (map<int, Bucket>::iterator it = mapama.begin(); it != mapama.end(); it++) {
 		(*it).second.BucketInFile(out);
@@ -73,7 +73,7 @@ void outputData(map<int, Bucket> mapama, char* outname) {
 	cout << "create " << outname << endl;
 }
 
-void outputDataVel(map<int, Bucket> mapama, char* outname) {
+void outputDataVel(map<int, Bucket>& mapama, char* outname) {
 	ofstream out(outname);
 	for (map<int, Bucket>::iterator it = mapama.begin(); it != mapama.end(); it++) {
 		(*it).second.BucketVelInFile(out);
@@ -81,7 +81,7 @@ void outputDataVel(map<int, Bucket> mapama, char* outname) {
 	out.close();
 	cout << "create " << outname << endl;
 }
-void outputDataRo(map<int, Bucket> mapama, char* outname) {
+void outputDataRo(map<int, Bucket>& mapama, char* outname) {
 	ofstream out(outname);
 	for (map<int, Bucket>::iterator it = mapama.begin(); it != mapama.end(); it++) {
 		(*it).second.BucketRoInFile(out);
@@ -89,7 +89,7 @@ void outputDataRo(map<int, Bucket> mapama, char* outname) {
 	out.close();
 	cout << "create " << outname << endl;
 }
-void outputDataP(map<int, Bucket> mapama, char* outname) {
+void outputDataP(map<int, Bucket>& mapama, char* outname) {
 	ofstream out(outname);
 	for (map<int, Bucket>::iterator it = mapama.begin(); it != mapama.end(); it++) {
 		(*it).second.BucketPInFile(out);
@@ -98,7 +98,7 @@ void outputDataP(map<int, Bucket> mapama, char* outname) {
 	cout << "create " << outname << endl;
 }
 
-void outputFluData(map<int, Bucket> mapama, char* outname) {
+void outputFluData(map<int, Bucket>& mapama, char* outname) {
 	ofstream out(outname);
 	for (map<int, Bucket>::iterator it = mapama.begin(); it != mapama.end(); it++) {
 		if ((*it).second.status == 0) {
@@ -109,7 +109,7 @@ void outputFluData(map<int, Bucket> mapama, char* outname) {
 	cout << "create " << outname << endl;
 }
 
-void outputFluDataVel(map<int, Bucket> mapama, char* outname) {
+void outputFluDataVel(map<int, Bucket>& mapama, char* outname) {
 	ofstream out(outname);
 	for (map<int, Bucket>::iterator it = mapama.begin(); it != mapama.end(); it++) {
 		if ((*it).second.status == 0) {
@@ -119,7 +119,7 @@ void outputFluDataVel(map<int, Bucket> mapama, char* outname) {
 	out.close();
 	cout << "create " << outname << endl;
 }
-void outputFluDataRo(map<int, Bucket> mapama, char* outname) {
+void outputFluDataRo(map<int, Bucket>& mapama, char* outname) {
 	ofstream out(outname);
 	for (map<int, Bucket>::iterator it = mapama.begin(); it != mapama.end(); it++) {
 		if ((*it).second.status == 0) {
@@ -129,7 +129,7 @@ void outputFluDataRo(map<int, Bucket> mapama, char* outname) {
 	out.close();
 	cout << "create " << outname << endl;
 }
-void outputFluDataP(map<int, Bucket> mapama, char* outname) {
+void outputFluDataP(map<int, Bucket>& mapama, char* outname) {
 	ofstream out(outname);
 	for (map<int, Bucket>::iterator it = mapama.begin(); it != mapama.end(); it++) {
 		if ((*it).second.status == 0) {
@@ -365,12 +365,12 @@ void BucketStep(double t) {
 				}
 			}
 			(*it).second.part[i].cRo = tmp1;
-			cout << tmp1 << " ";
-			if (tmp1 <= epsil) {
-				cout << "Ro==0: " << i;
-				int tmp11;
-				cin >> tmp11;
-			}
+//			cout << tmp1 << " ";
+//			if (tmp1 <= epsil) {
+//				cout << "Ro==0: " << i;
+//				int tmp11;
+//				cin >> tmp11;
+//			}
 			//cout<<tmp1<<"  ";
 			if ((*it).second.part[i].type == 1) {
 				(*it).second.part[i].cP = fluPmain + (*it).second.part[i].fluK
@@ -465,9 +465,7 @@ int main(int argc, char** argv) {
 		outputFluDataP(mapa_new, "Flu_p001.txt");
 	}
 	cout << "Enter" << endl;
-	int i;
-	cin >> i;
-	//	return 0;
+	return 0;
 }
 //outputData
 /*string filename="./movie/";
