@@ -18,20 +18,20 @@ double fluXStep, fluYStep, fluZStep; //шаги по x,y,z
 int wallXcount, wallYcount;
 double wallXmin, wallXmax, wallYmin, wallYmax, wallZmin, wallZmax;
 
-double epsil = 0.00001; //погрешность
+double epsilon = 0.00001; //погрешность
 int gridXstep, gridYstep;
 double** wall;//под батиметрию-высоты частиц склона/////////////
 double** flu;//////////////////////////////////////
 int filename_count = 5;
-double timestep = 0.1;
-int kolvotimestep = 10;
+double timeStep = 0.1;
+int stepCount = 10;
 
 ///Bucket
-double bucRadius; // радиус ячейки
+double bucketRadius; // радиус ячейки
 map<int, Bucket> mapa;
 map<int, Bucket> mapa_new;
 //const int bucCountMax=3000;//ограничение на количество ячеек
-int kolvoParN;//колво частиц всего
+int particlesCount;//колво частиц всего
 int kolvoParInRadX = 40;
 
 /////////flu
@@ -44,23 +44,19 @@ double wallRoo = 1000;//начальная плотность
 
 int kodir(double x, double y, double z)//c нуля,а количество с 1
 {
-	if ((x < wallXmin) || (x > (wallXmax + bucRadius)) || (y < wallYmin) || (y
-			> (wallYmax + bucRadius))) {
+	if ((x < wallXmin) || (x > (wallXmax + bucketRadius)) || (y < wallYmin) || (y
+			> (wallYmax + bucketRadius))) {
 		cout << "error kodir: point outside the area(" << x << ", " << y
 				<< ", " << z << " )" << endl;
-		int tmp1;
-		cin >> tmp1;
 		return 0;
 	} else {
-		int xx = (int) ((x - wallXmin) / (2 * bucRadius));
-		int yy = (int) ((y - wallYmin) / (2 * bucRadius));
-		int zz = (int) ((z - wallZmin) / (2 * bucRadius));
+		int xx = (int) ((x - wallXmin) / (2 * bucketRadius));
+		int yy = (int) ((y - wallYmin) / (2 * bucketRadius));
+		int zz = (int) ((z - wallZmin) / (2 * bucketRadius));
 		if ((xx < 999) && (yy < 999) && (zz < 999)) {
 			return xx * 1000000 + yy * 1000 + zz;
 		} else {
 			cout << "error kodir: count bucket is big" << endl;
-			int tmp1;
-			cin >> tmp1;
 			return 0;
 		}
 	}
@@ -148,46 +144,37 @@ void inputData(char* fluidSurf, char* wallSurf, char* outnm) // ввод нач�
 	ofstream out(outnm);
 	ifstream influ(fluidSurf);
 	ifstream inwall(wallSurf);
-
 	if (influ.fail()) {
 		cout << "Error reading " << fluidSurf << "'." << endl;
-		int tmp1;
-		cin >> tmp1;
 	}
 	if (inwall.fail()) {
 		cout << "Error reading " << wallSurf << "'." << endl;
-		int tmp1;
-		cin >> tmp1;
 	}
+	cout << "gridYstep : " << gridYstep << " gridXstep : " << gridXstep << endl;
 	wall = new double*[gridYstep];
 	for (int i = 0; i < gridYstep; i++)
 		wall[i] = new double[gridXstep];
 	flu = new double*[gridYstep];
 	for (int i = 0; i < gridYstep; i++)
 		flu[i] = new double[gridXstep];
-
 	string tmp2;
 	inwall >> tmp2 >> wallXcount >> wallYcount >> wallXmin >> wallXmax
 			>> wallYmin >> wallYmax >> wallZmin >> wallZmax;
 	influ >> tmp2 >> parXcount >> parYcount >> grdXmin >> grdXmax >> grdYmin
 			>> grdYmax >> grdZmin >> grdZmax;
-
 	if (wallXcount != parXcount) {
 		cout << "Error size X in file" << endl;
-		int tmp1;
-		cin >> tmp1;
 	}
 	if (wallYcount != parYcount) {
 		cout << "Error size Y in file" << endl;
-		int tmp1;
-		cin >> tmp1;
 	}
 
 	fluXStep = (grdXmax - grdXmin) / (parXcount - 1);
 	fluYStep = (grdYmax - grdYmin) / (parYcount - 1);
 	fluZStep = fluXStep;
-
 	double tmp3 = 0;
+	//TODO fix
+	cout << "parYcount : " << parYcount << " parXcount : " << parXcount << endl;
 	for (int j = 0; j < parYcount; j++) {
 		for (int i = 0; i < parXcount; i++) {
 			influ >> flu[i][j];
@@ -196,20 +183,17 @@ void inputData(char* fluidSurf, char* wallSurf, char* outnm) // ввод нач�
 		}
 	}
 	double Vall = tmp3 * fluXStep * fluYStep;
-	kolvoParN = (int) ((fluROOmain * Vall) / fluMmain);
-	double Vpar = Vall / kolvoParN;
+	particlesCount = (int) ((fluROOmain * Vall) / fluMmain);
+	double Vpar = Vall / particlesCount;
 	double parStep = pow(Vpar, 0.333333333);
-	tmp3 = (3 * Vall * kolvoParInRadX) / (4 * 3.1415926358 * kolvoParN);
-	bucRadius = pow(tmp3, 0.33333333333);
-	out << "kolvoParN   " << kolvoParN << endl;
+	tmp3 = (3 * Vall * kolvoParInRadX) / (4 * 3.1415926358 * particlesCount);
+	bucketRadius = pow(tmp3, 0.33333333333);
+	out << "kolvoParN   " << particlesCount << endl;
 	out << "parStep   " << parStep << endl;
-	out << "bucRadius   " << bucRadius << endl;
-	if (bucRadius < parStep) {
+	out << "bucRadius   " << bucketRadius << endl;
+	if (bucketRadius < parStep) {
 		cout << "Error kolvoParN and input data" << endl;
-		int tmp1;
-		cin >> tmp1;
 	}
-
 	//склон разбиваем на частицы
 	for (int i = 0; i < parXcount; i++) {
 		for (int j = 0; j < parYcount; j++) {
@@ -218,7 +202,7 @@ void inputData(char* fluidSurf, char* wallSurf, char* outnm) // ввод нач�
 			double parz = wall[i][j];
 
 			//bool tmp4=0;
-			double tmp3 = parz - bucRadius;
+			double tmp3 = parz - bucketRadius;
 			for (double k = tmp3; k < parz; k += parStep) {
 				for (double tmpx = 0; tmpx < fluXStep; tmpx += parStep) {
 					for (double tmpy = 0; tmpy < fluYStep; tmpy += parStep) {
@@ -228,21 +212,21 @@ void inputData(char* fluidSurf, char* wallSurf, char* outnm) // ввод нач�
 						 tmp4=1;
 						 }*/
 						if (((parx + tmpx) < wallXmin) || ((parx + tmpx)
-								> (wallXmax + bucRadius)) || ((pary + tmpy)
+								> (wallXmax + bucketRadius)) || ((pary + tmpy)
 								< wallYmin) || ((pary + tmpy) > (wallYmax
-								+ bucRadius))) {
+								+ bucketRadius))) {
 							//послед раз добавленные частицы-лишние отметаются
 						} else {
 							if (mapa.find(kodir(parx + tmpx, pary + tmpy, k))
 									== mapa.end()) {
 								Bucket b(int((parx + tmpx - wallXmin) / (2
-										* bucRadius)) * (2 * bucRadius)
+										* bucketRadius)) * (2 * bucketRadius)
 										+ wallXmin,
 										int((pary + tmpy - wallYmin) / (2
-												* bucRadius)) * (2 * bucRadius)
+												* bucketRadius)) * (2 * bucketRadius)
 												+ wallYmin, int((k - wallZmin)
-												/ (2 * bucRadius)) * (2
-												* bucRadius) + wallZmin);
+												/ (2 * bucketRadius)) * (2
+												* bucketRadius) + wallZmin);
 								mapa[kodir(parx + tmpx, pary + tmpy, k)] = b;
 							}
 							mapa[kodir(parx + tmpx, pary + tmpy, k)].part.push_back(
@@ -260,7 +244,6 @@ void inputData(char* fluidSurf, char* wallSurf, char* outnm) // ввод нач�
 			 */
 		}
 	}
-
 	//поток разбиваем на частицы
 	for (int j = 0; j < parYcount; j++) {
 		for (int i = 0; i < parXcount; i++) {
@@ -277,21 +260,21 @@ void inputData(char* fluidSurf, char* wallSurf, char* outnm) // ввод нач�
 						 tmp4=1;
 						 }*/
 						if (((parx + tmpx) < wallXmin) || ((parx + tmpx)
-								> (wallXmax + bucRadius)) || ((pary + tmpy)
+								> (wallXmax + bucketRadius)) || ((pary + tmpy)
 								< wallYmin) || ((pary + tmpy) > (wallYmax
-								+ bucRadius))) {
+								+ bucketRadius))) {
 							//послед раз добавленные частицы-лишние отметаются
 						} else {
 							if (mapa.find(kodir(parx + tmpx, pary + tmpy, k))
 									== mapa.end()) {
 								Bucket b(int((parx + tmpx - wallXmin) / (2
-										* bucRadius)) * (2 * bucRadius)
+										* bucketRadius)) * (2 * bucketRadius)
 										+ wallXmin,
 										int((pary + tmpy - wallYmin) / (2
-												* bucRadius)) * (2 * bucRadius)
+												* bucketRadius)) * (2 * bucketRadius)
 												+ wallYmin, int((k - wallZmin)
-												/ (2 * bucRadius)) * (2
-												* bucRadius) + wallZmin);
+												/ (2 * bucketRadius)) * (2
+												* bucketRadius) + wallZmin);
 								mapa[kodir(parx + tmpx, pary + tmpy, k)] = b;
 							}
 							mapa[kodir(parx + tmpx, pary + tmpy, k)].part.push_back(
@@ -317,9 +300,9 @@ void inputData(char* fluidSurf, char* wallSurf, char* outnm) // ввод нач�
  int part_size=(*it).second.part.size();
  for(int i=0;i<part_size;i++)
  {
- double tmpx=(*it).second.part[i].cX;
- double tmpy=(*it).second.part[i].cY;
- double tmpz=(*it).second.part[i].cZ;
+ double tmpx=(*it).second.part[i].x;
+ double tmpy=(*it).second.part[i].y;
+ double tmpz=(*it).second.part[i].z;
 
  if((tmpx<wallXmin)||(tmpx>wallXmax)||(tmpy<wallYmin)||(tmpy>wallYmax))
  {
@@ -361,14 +344,14 @@ void BucketStep(double t) {
 						} else {
 							tmp1 += mapa[((*it).first + x1 * 1000000 + x2
 									* 1000 + x3)].bucDen((*it).second.part[i],
-									bucRadius);
+									bucketRadius);
 						}
 					}
 				}
 			}
 			(*it).second.part[i].cRo = tmp1;
 			//			cout << tmp1 << " ";
-			//			if (tmp1 <= epsil) {
+			//			if (tmp1 <= epsilon) {
 			//				cout << "Ro==0: " << i;
 			//				int tmp11;
 			//				cin >> tmp11;
@@ -399,7 +382,7 @@ void BucketStep(double t) {
 							double f[6] = { 0, 0, 0, 0, 0, 0 };
 							mapa_new[((*it).first + x1 * 1000000 + x2 * 1000
 									+ x3)].bucForse((*it).second.part[i],
-									bucRadius, f);
+									bucketRadius, f);
 							for (int k = 0; k < 6; k++) {
 								forse[k] += f[k];
 							}
@@ -420,8 +403,8 @@ void BucketStep(double t) {
 			//cout<<endl;
 		}
 	}
-	//		(*it).second.bucVel((*it).second.part[i],bucDiameter,timestep);
-	//		(*it).second.bucPosition((*it).second.part[i],timestep );
+	//		(*it).second.bucVel((*it).second.part[i],bucDiameter,timeStep);
+	//		(*it).second.bucPosition((*it).second.part[i],timeStep );
 	cout << "Computation " << endl;
 }
 void inputParams(char* input) {
@@ -451,9 +434,9 @@ int main(int argc, char** argv) {
 	//	outputFluData(mapa, "Flu_000.txt");
 	//	outputFluDataVel(mapa,"Flu_vel000.txt");
 	//	outputFluDataRo(mapa,"Flu_ro000.txt");
-	for (int t = 1; t <= kolvotimestep; t++) {
+	for (int t = 1; t <= stepCount; t++) {
 		cout << "t   " << t << endl;
-		BucketStep(t * timestep);
+		BucketStep(t * timeStep);
 		//	updateBucket();
 
 		//		outputData(mapa_new,"001.txt");

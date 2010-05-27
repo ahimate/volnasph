@@ -13,16 +13,12 @@ class Bucket {
 public:
 	vector<Particle> part;
 	bool status;//1-пустой
-	double bX; // х-координата начала ячейки
-	double bY; // y-координата начала ячейки
-	double bZ; // z-координата начала ячейки
+	double bucketX; // х-координата начала ячейки
+	double bucketY; // y-координата начала ячейки
+	double bucketZ; // z-координата начала ячейки
 	// constructor
-	Bucket() {
-		bX = 0;
-		bY = 0;
-		bZ = 0;
-	}
-	Bucket(double buX, double buY, double buZ);
+	Bucket();
+	Bucket(double bucketX, double bucketY, double bucketZ);
 
 	void BucketInFile(ofstream &out);
 	void BucketVelInFile(ofstream &out);
