@@ -11,10 +11,10 @@ double Particle::fluROO = 998.29; //начальная плотность
 double Particle::fluK = 3; //коэф в уравн состояния
 double Particle::wallM = 0.04; // масса
 
-Particle::Particle(double cpX, double cpY, double cpZ) {
-	cX = cpX;
-	cY = cpY;
-	cZ = cpZ;
+Particle::Particle(double x, double y, double z) {
+	this->x = x;
+	this->y = y;
+	this->z = z;
 	cU = 0;
 	cV = 0;
 	cW = 0;
@@ -23,9 +23,9 @@ Particle::Particle(double cpX, double cpY, double cpZ) {
 	type = 0;
 }
 Particle::Particle(double x, double y, double z, double u, double v, double w) {
-	cX = x;
-	cY = y;
-	cZ = z;
+	this->x = x;
+	this->y = y;
+	this->z = z;
 	cU = u;
 	cV = v;
 	cW = w;
@@ -34,17 +34,13 @@ Particle::Particle(double x, double y, double z, double u, double v, double w) {
 	type = 1;
 }
 
-double Particle::parDistanse(Particle& a, Particle& b) {
-	double tmp1 = pow(b.cX - a.cX, 2);
-	double tmp2 = pow(b.cY - a.cY, 2);
-	double tmp3 = pow(b.cZ - a.cZ, 2);
-	double tmp4 = tmp1 + tmp2 + tmp3;
-	return pow(tmp4, 0.5);
+double Particle::getDistance(Particle& a, Particle& b) {
+	return sqrt((b.x - a.x) * (b.x - a.x) + (b.y - a.y) * (b.y - a.y) + (b.z
+			- a.z) * (b.z - a.z));
 }
-;
 
 double Particle::fluFpress(Particle& a, Particle& b, double re, double ba) {
-	double modR = Particle::parDistanse(a, b);
+	double modR = Particle::getDistance(a, b);
 	if (modR > re) {
 		return 0;
 	} else {
@@ -57,7 +53,7 @@ double Particle::fluFpress(Particle& a, Particle& b, double re, double ba) {
 }
 ;
 double Particle::fluFvis(Particle& a, Particle& b, double re, double ba) {
-	double modR = Particle::parDistanse(a, b);
+	double modR = Particle::getDistance(a, b);
 	if (modR > re) {
 		return 0;
 	} else {
@@ -67,16 +63,16 @@ double Particle::fluFvis(Particle& a, Particle& b, double re, double ba) {
 	}
 }
 ;
-double Particle::fluRoWall(double riw, double wallmass, double re)///////////////////проверка
+double Particle::fluRoWall(double riw, double wallMass, double re)///////////////////проверка
 {
 	double tmp = 315 / (64 * Pi * pow(re, 9));
 	double tmp2 = pow(riw, 2);
 	double W = tmp * (pow(abs(re * re - tmp2), 3));//модуль
-	return wallmass * W;
+	return wallMass * W;
 }
 ;
 double Particle::fluRo(Particle& a, Particle& b, double re) {
-	double modR = a.parDistanse(a, b);
+	double modR = getDistance(a, b);
 	if (modR > re) {
 		return 0;
 	} else {
@@ -89,7 +85,7 @@ double Particle::fluRo(Particle& a, Particle& b, double re) {
 ;
 
 /*
- double static fluFpress(Fluid& a, Fluid& b, double re,double ba); //функция давления ba=b.cX(y,z)-a.cX(y,z, a=i,b=j
+ double static fluFpress(Fluid& a, Fluid& b, double re,double ba); //функция давления ba=b.x(y,z)-a.x(y,z, a=i,b=j
  double static fluFvis(Fluid& a, Fluid& b, double re,double ba); //функция для вязкости ba=b.cU(v,w)-a.cU(v,w), a=i,b=j
  double static fluRo(Fluid& a,Fluid& b, double re); //функция для расчета плотности a-искомая,b-из ячейки
 

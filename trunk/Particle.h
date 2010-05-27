@@ -8,9 +8,9 @@ using namespace std;
 
 class Particle {
 public:
-	double cX; // х-координата
-	double cY; // y-координата
-	double cZ; // z-координата
+	double x; // х-координата
+	double y; // y-координата
+	double z; // z-координата
 	double cU; // скорость частицы по х
 	double cV; // скорость частицы по у
 	double cW; // скорость частицы по у
@@ -19,15 +19,14 @@ public:
 
 	bool type;// 0-склон-мыс,1-поток-движ частицы
 	// constructor
-	Particle(double cpX, double cpY, double cpZ);
-	Particle(double cpX, double cpY, double cpZ, double cpU, double cpV,
-			double cpW);
+	Particle(double x, double y, double z);
+	Particle(double x, double y, double z, double u, double v, double w);
 
-	double static parDistanse(Particle& a, Particle& b); //расчет расстояния между 2 частицами
+	double static getDistance(Particle& a, Particle& b); //расчет расстояния между 2 частицами
 
-	double static fluFpress(Particle& a, Particle& b, double re, double ba); //функция давления ba=b.cX(y,z)-a.cX(y,z, a=i,b=j
+	double static fluFpress(Particle& a, Particle& b, double re, double ba); //функция давления ba=b.x(y,z)-a.x(y,z, a=i,b=j
 	double static fluFvis(Particle& a, Particle& b, double re, double ba); //функция для вязкости ba=b.cU(v,w)-a.cU(v,w), a=i,b=j
-	double static fluRoWall(double riw, double wallmass, double re);
+	double static fluRoWall(double riw, double wallMass, double re);
 	double static fluRo(Particle& a, Particle& b, double re); //функция для расчета плотности a-искомая,b-из ячейки
 
 	static double wallM; // масса

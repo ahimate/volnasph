@@ -3,18 +3,21 @@
 using namespace std;
 double eps = 1e-20; //погрешность
 double g = 9.80665;
-Bucket::Bucket(double x, double y, double z) {
-	bX = x;
-	bY = y;
-	bZ = z;
+Bucket::Bucket() {
+	bucketX = bucketY = bucketZ = 0;
+}
+Bucket::Bucket(double bucketX, double bucketY, double bucketZ) {
+	this->bucketX = bucketX;
+	this->bucketY = bucketY;
+	this->bucketZ = bucketZ;
 	status = 1;//пустой
 }
 void Bucket::BucketInFile(ofstream &out) {
 	int tmp1 = part.size();
 	for (int tmp2 = 0; tmp2 < tmp1; tmp2++) {
-		out << part[tmp2].cX << "  ";
-		out << part[tmp2].cY << "  ";
-		out << part[tmp2].cZ << "  ";
+		out << part[tmp2].x << "  ";
+		out << part[tmp2].y << "  ";
+		out << part[tmp2].z << "  ";
 		out << endl;
 	}
 }
@@ -46,9 +49,9 @@ void Bucket::FluInFile(ofstream &out) {
 	int tmp1 = part.size();
 	for (int tmp2 = 0; tmp2 < tmp1; tmp2++) {
 		if (part[tmp2].type == 1) {
-			out << part[tmp2].cX << "  ";
-			out << part[tmp2].cY << "  ";
-			out << part[tmp2].cZ << "  ";
+			out << part[tmp2].x << "  ";
+			out << part[tmp2].y << "  ";
+			out << part[tmp2].z << "  ";
 			out << endl;
 		}
 	}
@@ -87,13 +90,13 @@ double Bucket::bucRiw(Particle& a)///////////////////////////////////
 {
 	if (a.type == 1)//а- флюид
 	{
-		double riw = a.parDistanse(a, part[0]);
+		double riw = a.getDistance(a, part[0]);
 		int part_size = part.size();
 		for (int i = 1; i < part_size; i++) {
 			if (part[i].type == 0)//склон
 			{
-				if (a.parDistanse(a, part[i]) < riw) {
-					riw = a.parDistanse(a, part[i]);
+				if (a.getDistance(a, part[i]) < riw) {
+					riw = a.getDistance(a, part[i]);
 				}
 			}
 		}
@@ -112,9 +115,8 @@ double Bucket::bucDen(Particle& a, double re) {
 			for (int i = 0; i < part_size; i++) {
 				if (part[i].type == 1)//поток
 				{
-					if ((abs(a.cX - part[i].cX) > eps) && (abs(a.cY
-							- part[i].cY) > eps) && (abs(a.cZ - part[i].cZ)
-							> eps)) {
+					if ((abs(a.x - part[i].x) > eps) && (abs(a.y - part[i].y)
+							> eps) && (abs(a.z - part[i].z) > eps)) {
 						ro += a.fluRo(a, part[i], re);
 					}
 				} else {
@@ -139,11 +141,11 @@ void Bucket::bucForse(Particle& a, double re, double res[6])//производн
 	if ((a.type == 1) && (status == 0))//там есть частицы склона
 	{
 		for (int i = 0; i < part_size; i++) {
-			if ((part[i].type == 1) && (abs(a.cX - part[i].cX) > eps) && (abs(
-					a.cY - part[i].cY) > eps) && (abs(a.cZ - part[i].cZ) > eps)) {
-				res[0] += a.fluFpress(a, part[i], re, a.cX - part[i].cX);//presx
-				res[1] += a.fluFpress(a, part[i], re, a.cY - part[i].cY);//presy
-				res[2] += a.fluFpress(a, part[i], re, a.cZ - part[i].cZ);//presz
+			if ((part[i].type == 1) && (abs(a.x - part[i].x) > eps) && (abs(a.y
+					- part[i].y) > eps) && (abs(a.z - part[i].z) > eps)) {
+				res[0] += a.fluFpress(a, part[i], re, a.x - part[i].x);//presx
+				res[1] += a.fluFpress(a, part[i], re, a.y - part[i].y);//presy
+				res[2] += a.fluFpress(a, part[i], re, a.z - part[i].z);//presz
 				res[3] += a.fluFvis(a, part[i], re, part[i].cU - a.cU);//visx
 				res[4] += a.fluFvis(a, part[i], re, part[i].cV - a.cV);//visy
 				res[5] += a.fluFvis(a, part[i], re, part[i].cW - a.cW);//visz
@@ -157,8 +159,8 @@ void Bucket::bucForse(Particle& a, double re, double res[6])//производн
 
 void Bucket::bucPosition(Particle& a, double timestep) {
 	if (a.type == 1) {
-		a.cX = a.cX + a.cU * timestep;
-		a.cY = a.cY + a.cV * timestep;
-		a.cZ = a.cZ + a.cW * timestep;
+		a.x = a.x + a.cU * timestep;
+		a.y = a.y + a.cV * timestep;
+		a.z = a.z + a.cW * timestep;
 	}
 }
