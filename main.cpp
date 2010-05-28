@@ -24,7 +24,7 @@ double** wall;//под батиметрию-высоты частиц склон
 double** flu;//////////////////////////////////////
 int filename_count = 5;
 double timeStep = 0.1;
-int stepCount = 10;
+int stepCount = 100;
 
 ///Bucket
 double bucketRadius; // радиус ячейки
@@ -68,35 +68,44 @@ void outputData(map<int, Bucket>& mapama, const char* outname) {
 		(*it).second.BucketInFile(out);
 	}
 	out.close();
-	cout << "create " << outname << endl;
+	cout << outname << " created" << endl;
 }
 
-void outputDataVel(map<int, Bucket>& mapama, const char* outname) {
+void outputParticles(map<int, Bucket>& mapama, const char* outname) {
 	ofstream out(outname);
 	for (map<int, Bucket>::iterator it = mapama.begin(); it != mapama.end(); it++) {
-		(*it).second.BucketVelInFile(out);
+		(*it).second.BucketParticlesInFile(out);
 	}
 	out.close();
-	cout << "create " << outname << endl;
+	cout << outname << " created" << endl;
 }
-void outputDataRo(map<int, Bucket>& mapama, const char* outname) {
-	ofstream out(outname);
-	for (map<int, Bucket>::iterator it = mapama.begin(); it != mapama.end(); it++) {
-		(*it).second.BucketRoInFile(out);
-	}
-	out.close();
-	cout << "create " << outname << endl;
-}
-void outputDataP(map<int, Bucket>& mapama, const char* outname) {
-	ofstream out(outname);
-	for (map<int, Bucket>::iterator it = mapama.begin(); it != mapama.end(); it++) {
-		(*it).second.BucketPInFile(out);
-	}
-	out.close();
-	cout << "create " << outname << endl;
-}
-
-void outputFluData(map<int, Bucket>& mapama, const char* outname) {
+/*
+ void outputDataVel(map<int, Bucket>& mapama, const char* outname) {
+ ofstream out(outname);
+ for (map<int, Bucket>::iterator it = mapama.begin(); it != mapama.end(); it++) {
+ (*it).second.BucketVelInFile(out);
+ }
+ out.close();
+ cout << "create " << outname << endl;
+ }
+ void outputDataRo(map<int, Bucket>& mapama, const char* outname) {
+ ofstream out(outname);
+ for (map<int, Bucket>::iterator it = mapama.begin(); it != mapama.end(); it++) {
+ (*it).second.BucketRoInFile(out);
+ }
+ out.close();
+ cout << "create " << outname << endl;
+ }
+ void outputDataP(map<int, Bucket>& mapama, const char* outname) {
+ ofstream out(outname);
+ for (map<int, Bucket>::iterator it = mapama.begin(); it != mapama.end(); it++) {
+ (*it).second.BucketPInFile(out);
+ }
+ out.close();
+ cout << "create " << outname << endl;
+ }
+ */
+void outputFluidData(map<int, Bucket>& mapama, const char* outname) {
 	ofstream out(outname);
 	for (map<int, Bucket>::iterator it = mapama.begin(); it != mapama.end(); it++) {
 		if ((*it).second.status == 0) {
@@ -104,43 +113,56 @@ void outputFluData(map<int, Bucket>& mapama, const char* outname) {
 		}
 	}
 	out.close();
-	cout << "create " << outname << endl;
+	cout << outname << " created" << endl;
+}
+void outputFluidParticles(map<int, Bucket>& mapama, const char* outname) {
+	ofstream out(outname);
+	for (map<int, Bucket>::iterator it = mapama.begin(); it != mapama.end(); it++) {
+		if ((*it).second.status == 0) {
+			(*it).second.FluidParticlesInFile(out);
+		}
+	}
+	out.close();
+	cout << outname << " created" << endl;
 }
 
-void outputFluDataVel(map<int, Bucket>& mapama, const char* outname) {
-	ofstream out(outname);
-	for (map<int, Bucket>::iterator it = mapama.begin(); it != mapama.end(); it++) {
-		if ((*it).second.status == 0) {
-			(*it).second.FluVelInFile(out);
-		}
-	}
-	out.close();
-	cout << "create " << outname << endl;
-}
-void outputFluDataRo(map<int, Bucket>& mapama, const char* outname) {
-	ofstream out(outname);
-	for (map<int, Bucket>::iterator it = mapama.begin(); it != mapama.end(); it++) {
-		if ((*it).second.status == 0) {
-			(*it).second.FluRoInFile(out);
-		}
-	}
-	out.close();
-	cout << "create " << outname << endl;
-}
-void outputFluDataP(map<int, Bucket>& mapama, const char* outname) {
-	ofstream out(outname);
-	for (map<int, Bucket>::iterator it = mapama.begin(); it != mapama.end(); it++) {
-		if ((*it).second.status == 0) {
-			(*it).second.FluPInFile(out);
-		}
-	}
-	out.close();
-	cout << "create " << outname << endl;
-}
-
-void inputData(const char* fluidSurfaceFileName, const char* wallSurfaceFileName, const char* outnm) // ввод начальных данных из файла
+/*
+ void outputFluDataVel(map<int, Bucket>& mapama, const char* outname) {
+ ofstream out(outname);
+ for (map<int, Bucket>::iterator it = mapama.begin(); it != mapama.end(); it++) {
+ if ((*it).second.status == 0) {
+ (*it).second.FluVelInFile(out);
+ }
+ }
+ out.close();
+ cout << "create " << outname << endl;
+ }
+ void outputFluDataRo(map<int, Bucket>& mapama, const char* outname) {
+ ofstream out(outname);
+ for (map<int, Bucket>::iterator it = mapama.begin(); it != mapama.end(); it++) {
+ if ((*it).second.status == 0) {
+ (*it).second.FluRoInFile(out);
+ }
+ }
+ out.close();
+ cout << "create " << outname << endl;
+ }
+ void outputFluDataP(map<int, Bucket>& mapama, const char* outname) {
+ ofstream out(outname);
+ for (map<int, Bucket>::iterator it = mapama.begin(); it != mapama.end(); it++) {
+ if ((*it).second.status == 0) {
+ (*it).second.FluPInFile(out);
+ }
+ }
+ out.close();
+ cout << "create " << outname << endl;
+ }
+ */
+void inputData(const char* fluidSurfaceFileName,
+		const char* wallSurfaceFileName, const char* outnm) // ввод начальных данных из файла
 {
-	cout << endl << "INPUT DATA " << fluidSurfaceFileName << " , " << wallSurfaceFileName << endl;
+	cout << endl << "INPUT DATA " << fluidSurfaceFileName << " , "
+			<< wallSurfaceFileName << endl;
 	ofstream out(outnm);
 	ifstream fluidInput(fluidSurfaceFileName);
 	ifstream wallInput(wallSurfaceFileName);
@@ -160,8 +182,8 @@ void inputData(const char* fluidSurfaceFileName, const char* wallSurfaceFileName
 	string tmp2;
 	wallInput >> tmp2 >> wallXcount >> wallYcount >> wallXmin >> wallXmax
 			>> wallYmin >> wallYmax >> wallZmin >> wallZmax;
-	fluidInput >> tmp2 >> parXcount >> parYcount >> grdXmin >> grdXmax >> grdYmin
-			>> grdYmax >> grdZmin >> grdZmax;
+	fluidInput >> tmp2 >> parXcount >> parYcount >> grdXmin >> grdXmax
+			>> grdYmin >> grdYmax >> grdZmin >> grdZmax;
 	if (wallXcount != parXcount) {
 		cout << "Error size X in file" << endl;
 	}
@@ -300,43 +322,48 @@ void inputData(const char* fluidSurfaceFileName, const char* wallSurfaceFileName
 	out.close();
 }
 
-/*
- //бежит по мапа_нью и в пустой мапа добавляет ячейки и частицы
- void updateBucket()
- {
- mapa.clear();
- int count=0;
- for(map<int, Bucket>::iterator it = mapa_new.begin(); it!=mapa_new.end();it++)
- {
- int part_size=(*it).second.part.size();
- for(int i=0;i<part_size;i++)
- {
- double tmpx=(*it).second.part[i].x;
- double tmpy=(*it).second.part[i].y;
- double tmpz=(*it).second.part[i].z;
+//бежит по мапа_нью и в пустой мапа добавляет ячейки и частицы
+void updateBucket() {
+	mapa.clear();
+	int count = 0;
+	int tmpcount = 0;
+	for (map<int, Bucket>::iterator it = mapa_new.begin(); it != mapa_new.end(); it++) {
+		int part_size = (*it).second.part.size();
+		for (int i = 0; i < part_size; i++) {
+			double tmpx = (*it).second.part[i].x;
+			double tmpy = (*it).second.part[i].y;
+			double tmpz = (*it).second.part[i].z;
 
- if((tmpx<wallXmin)||(tmpx>wallXmax)||(tmpy<wallYmin)||(tmpy>wallYmax))
- {
- //точку вне области не считаем
- count++;
- }
- else
- {
- if(mapa.find(kodir(tmpx,tmpy,tmpz)) == mapa.end())
- {
- Bucket a(int((tmpx-grdXmin)/bucDiameter)*bucDiameter+grdXmin,
- int((tmpy-grdYmin)/bucDiameter)*bucDiameter+grdYmin,
- int((tmpz-grdZmin)/bucDiameter)*bucDiameter+grdZmin);
- mapa[kodir(tmpx,tmpy,tmpz)]=a;
- }
- mapa[kodir(tmpx,tmpy,tmpz)].part.push_back((*it).second.part[i]);
- mapa[kodir(tmpx,tmpy,tmpz)].status=0;
- }
- }
- }
- cout<<"Free particles "<<count<<endl;
- }
- */
+			if ((tmpx < wallXmin) || (tmpx > wallXmax) || (tmpy < wallYmin)
+					|| (tmpy > wallYmax)) {
+				//точку вне области не считаем
+				if ((*it).second.part[i].type == 1) {
+					count++;
+				}
+			} else {
+				if (mapa.find(kodir(tmpx, tmpy, tmpz)) == mapa.end()) {
+					Bucket a(int((tmpx - grdXmin) / (2 * bucketRadius)) * (2
+							* bucketRadius) + grdXmin, int((tmpy - grdYmin)
+							/ (2 * bucketRadius)) * (2 * bucketRadius)
+							+ grdYmin, int((tmpz - grdZmin)
+							/ (2 * bucketRadius)) * (2 * bucketRadius)
+							+ grdZmin);
+					mapa[kodir(tmpx, tmpy, tmpz)] = a;
+				}
+				mapa[kodir(tmpx, tmpy, tmpz)].part.push_back(
+						(*it).second.part[i]);
+				if ((*it).second.part[i].type == 1) {
+					tmpcount++;
+					mapa[kodir(tmpx, tmpy, tmpz)].status = 0;
+				}
+			}
+		}
+	}
+	cout << "T: " << time << "  part: " << tmpcount << " free: " << count
+			<< endl;
+
+}
+
 void BucketStep(double t) {
 	//создаем массив на новом временном шаге
 	mapa_new = mapa;
@@ -345,21 +372,24 @@ void BucketStep(double t) {
 		int part_size = (*it).second.part.size();
 		for (int i = 0; i < part_size; i++) {
 			//double tmp1=(*it).second.bucDen((*it).second.part[i],(bucDiameter/2));
-			double tmp1 = 0;
-			for (int x = -1; x < 2; ++x) {
-				for (int y = -1; y < 2; ++y) {
-					for (int z = -1; z < 2; ++z) {
-						if (mapa_new.find((*it).first + x * 1000000 + y * 1000
-								+ z) == mapa_new.end()) {
-							//соседа нету
-						} else {
-							tmp1 += mapa[(*it).first + x * 1000000 + y * 1000
-									+ z].bucDen((*it).second.part[i],
-									bucketRadius);
+
+			if ((*it).second.part[i].type == 1) {
+				double tmp1 = 0;
+				for (int x = -1; x < 2; ++x) {
+					for (int y = -1; y < 2; ++y) {
+						for (int z = -1; z < 2; ++z) {
+							if (mapa_new.find((*it).first + x * 1000000 + y
+									* 1000 + z) == mapa_new.end()) {
+								//соседа нету
+							} else {
+								tmp1 += mapa[(*it).first + x * 1000000 + y
+										* 1000 + z].bucDen(
+										(*it).second.part[i], bucketRadius);
+							}
 						}
 					}
 				}
-			}
+
 			(*it).second.part[i].cRo = tmp1;
 			//			cout << tmp1 << " ";
 			//			if (tmp1 <= epsilon) {
@@ -368,11 +398,13 @@ void BucketStep(double t) {
 			//				cin >> tmp11;
 			//			}
 			//cout<<tmp1<<"  ";
+
 			if ((*it).second.part[i].type == 1) {
 				(*it).second.part[i].cP = fluPmain + (*it).second.part[i].fluK
 						* ((*it).second.part[i].cRo
 								- (*it).second.part[i].fluROO);
 				//	cout<<(*it).second.part[i].cP<<endl;
+			}
 			}
 		}
 	}
@@ -381,36 +413,39 @@ void BucketStep(double t) {
 	for (map<int, Bucket>::iterator it = mapa_new.begin(); it != mapa_new.end(); it++) {
 		int part_size = (*it).second.part.size();
 		for (int i = 0; i < part_size; i++) {
-			double forse[6] = { 0, 0, 0, 0, 0, 0 };
-			//////////
-			for (int x = -1; x < 2; ++x) {
-				for (int y = -1; y < 2; ++y) {
-					for (int z = -1; z < 2; ++z) {
-						if (mapa_new.find((*it).first + x * 1000000 + y * 1000
-								+ z) == mapa_new.end()) {
-							//соседа нету
-						} else {
-							double f[6] = { 0, 0, 0, 0, 0, 0 };
-							mapa_new[((*it).first + x * 1000000 + y * 1000 + z)].bucForse(
-									(*it).second.part[i], bucketRadius, f);
-							for (int k = 0; k < 6; k++) {
-								forse[k] += f[k];
+			if ((*it).second.part[i].type == 1) {
+				double forse[6] = { 0, 0, 0, 0, 0, 0 };
+				//////////
+				for (int x = -1; x < 2; ++x) {
+					for (int y = -1; y < 2; ++y) {
+						for (int z = -1; z < 2; ++z) {
+							if (mapa_new.find((*it).first + x * 1000000 + y
+									* 1000 + z) == mapa_new.end()) {
+								//соседа нету
+							} else {
+								double f[6] = { 0, 0, 0, 0, 0, 0 };
+								mapa_new[((*it).first + x * 1000000 + y * 1000
+										+ z)].bucForse((*it).second.part[i],
+										bucketRadius, f);
+								for (int k = 0; k < 6; k++) {
+									forse[k] += f[k];
+								}
 							}
 						}
 					}
 				}
-			}
-			double acceleration[3] = { 0, 0, 0 };
-			for (int k = 0; k < 3; k++) {
-				double tmp8 = (*it).second.part[i].cRo * forse[k]
-						+ (*it).second.part[i].fluNu * forse[k + 3];
-				if (k == 2) {
-					tmp8 += (*it).second.part[i].cRo * 9.80665;//g
+				double acceleration[3] = { 0, 0, 0 };
+				for (int k = 0; k < 3; k++) {
+					double tmp8 = (*it).second.part[i].cRo * forse[k]
+							+ (*it).second.part[i].fluNu * forse[k + 3];
+					if (k == 2) {
+						tmp8 += (*it).second.part[i].cRo * 9.80665;//g
+					}
+					acceleration[k] = tmp8 / ((*it).second.part[i].cRo);
+					//	cout<<acceleration[k]<<"  ";
 				}
-				acceleration[k] = tmp8 / ((*it).second.part[i].cRo);
-				//	cout<<acceleration[k]<<"  ";
+				//cout<<endl;
 			}
-			//cout<<endl;
 		}
 	}
 	//		(*it).second.bucVel((*it).second.part[i],bucDiameter,timeStep);
@@ -428,6 +463,9 @@ void inputParams(const char* input) {
 int main(int argc, char** argv) {
 	if (argc != 4) {
 		cout << "Error argv" << endl;
+		cout
+				<< "Usage: volnasph fluidDataFileName wallDataFileName inputParametersFileName"
+				<< endl;
 		return 1;
 	}
 	inputParams(argv[3]);
@@ -435,29 +473,45 @@ int main(int argc, char** argv) {
 	//	inputParams("input.txt");
 	//	inputData("fluid.grd","wall.grd","Data.txt");//	inputData("f.grd","w.grd");
 
-	//	outputData(mapa,"000.txt");
+	outputData(mapa, "000.txt");
+	//	outputParticles (mapa,"000.txt");
+
 	//	outputDataVel(mapa,"vel000.txt");
 	//	outputDataRo(mapa,"ro000.txt");
 
-	//	outputFluData(mapa, "Flu_000.txt");
+	outputFluidData(mapa, "Flu_000.txt");
+	//	outputFluidParticles (mapa, "Flu_000.txt");
+
 	//	outputFluDataVel(mapa,"Flu_vel000.txt");
 	//	outputFluDataRo(mapa,"Flu_ro000.txt");
 	for (int t = 1; t <= stepCount; t++) {
 		cout << "step: " << t << endl;
 		BucketStep(t * timeStep);
-		//	updateBucket();
+		updateBucket();
 
 		//		outputData(mapa_new,"001.txt");
+		//      outputParticles(mapa_new,"001.txt");
+
 		//		outputDataVel(mapa_new,"vel001.txt");
 		//		outputDataRo(mapa_new,"ro001.txt");
 		//		outputDataP(mapa_new,"p001.txt");
-		string fileName = "Flu_";
+
+
+		//output all particles (fluid and wall)
+		string outputFileName = "";
 		char numFile[5];
 		sprintf(numFile, "%d", t);
-		fileName.append(numFile);
-		fileName.append(".txt");
-		outputData(mapa, fileName.c_str());
-		//		outputFluData(mapa_new, fileName.c_str());
+		outputFileName.append(numFile);
+		outputFileName.append(".txt");
+		outputData(mapa, outputFileName.c_str());
+		//		outputParticles (mapa, fileName.c_str())
+
+		//output only fluid particles
+		outputFileName.insert(0, "Flu_");
+		outputFluidData(mapa_new, outputFileName.c_str());
+		//		outputFluidParticles(mapa_new, fileName.c_str());
+
+
 		//		outputFluDataVel(mapa_new,"Flu_vel001.txt");
 		//		outputFluDataRo(mapa_new, "Flu_ro001.txt");
 		//		outputFluDataP(mapa_new, "Flu_p001.txt");
