@@ -21,14 +21,16 @@ public:
 	Bucket(double bucketX, double bucketY, double bucketZ);
 
 	void BucketInFile(ofstream &out);
-	void BucketVelInFile(ofstream &out);
-	void BucketRoInFile(ofstream &out);
-	void BucketPInFile(ofstream &out);
+	void BucketParticlesInFile (ofstream &out);
+//	void BucketVelInFile(ofstream &out);
+//	void BucketRoInFile(ofstream &out);
+//	void BucketPInFile(ofstream &out);
 
 	void FluInFile(ofstream &out);
-	void FluVelInFile(ofstream &out);
-	void FluRoInFile(ofstream &out);
-	void FluPInFile(ofstream &out);
+	void FluidParticlesInFile (ofstream &out);
+//	void FluVelInFile(ofstream &out);
+//	void FluRoInFile(ofstream &out);
+//	void FluPInFile(ofstream &out);
 
 	double bucRiw(Particle& a);
 	double bucDen(Particle& a, double re);

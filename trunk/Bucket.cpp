@@ -10,7 +10,7 @@ Bucket::Bucket(double bucketX, double bucketY, double bucketZ) {
 	this->bucketX = bucketX;
 	this->bucketY = bucketY;
 	this->bucketZ = bucketZ;
-	status = 1;//пустой
+	status = 1;//не пустой
 }
 void Bucket::BucketInFile(ofstream &out) {
 	int tmp1 = part.size();
@@ -21,30 +21,54 @@ void Bucket::BucketInFile(ofstream &out) {
 		out << endl;
 	}
 }
-void Bucket::BucketVelInFile(ofstream &out) {
+void Bucket::BucketParticlesInFile(ofstream &out) {
 	int tmp1 = part.size();
+	out << "x" << "  ";
+	out << "y" << "  ";
+	out << "z" << "  ";
+	out << "U" << "  ";
+	out << "V" << "  ";
+	out << "W" << "  ";
+	out << "Ro" << "  ";
+	out << "P" << "  ";
+	out << endl;
 	for (int tmp2 = 0; tmp2 < tmp1; tmp2++) {
+		out << part[tmp2].x << "  ";
+		out << part[tmp2].y << "  ";
+		out << part[tmp2].z << "  ";
 		out << part[tmp2].cU << "  ";
 		out << part[tmp2].cV << "  ";
 		out << part[tmp2].cW << "  ";
-		out << endl;
-	}
-}
-void Bucket::BucketRoInFile(ofstream &out) {
-	int tmp1 = part.size();
-	for (int tmp2 = 0; tmp2 < tmp1; tmp2++) {
 		out << part[tmp2].cRo << "  ";
-		out << endl;
-	}
-}
-void Bucket::BucketPInFile(ofstream &out) {
-	int tmp1 = part.size();
-	for (int tmp2 = 0; tmp2 < tmp1; tmp2++) {
 		out << part[tmp2].cP << "  ";
 		out << endl;
 	}
 }
-
+/*
+ void Bucket::BucketVelInFile(ofstream &out) {
+ int tmp1 = part.size();
+ for (int tmp2 = 0; tmp2 < tmp1; tmp2++) {
+ out << part[tmp2].cU << "  ";
+ out << part[tmp2].cV << "  ";
+ out << part[tmp2].cW << "  ";
+ out << endl;
+ }
+ }
+ void Bucket::BucketRoInFile(ofstream &out) {
+ int tmp1 = part.size();
+ for (int tmp2 = 0; tmp2 < tmp1; tmp2++) {
+ out << part[tmp2].cRo << "  ";
+ out << endl;
+ }
+ }
+ void Bucket::BucketPInFile(ofstream &out) {
+ int tmp1 = part.size();
+ for (int tmp2 = 0; tmp2 < tmp1; tmp2++) {
+ out << part[tmp2].cP << "  ";
+ out << endl;
+ }
+ }
+ */
 void Bucket::FluInFile(ofstream &out) {
 	int tmp1 = part.size();
 	for (int tmp2 = 0; tmp2 < tmp1; tmp2++) {
@@ -56,6 +80,32 @@ void Bucket::FluInFile(ofstream &out) {
 		}
 	}
 }
+void Bucket::FluidParticlesInFile(ofstream &out) {
+	int tmp1 = part.size();
+	out << "x" << "  ";
+	out << "y" << "  ";
+	out << "z" << "  ";
+	out << "U" << "  ";
+	out << "V" << "  ";
+	out << "W" << "  ";
+	out << "Ro" << "  ";
+	out << "P" << "  ";
+	out << endl;
+	for (int tmp2 = 0; tmp2 < tmp1; tmp2++) {
+		if (part[tmp2].type == 1) {
+			out << part[tmp2].x << "  ";
+			out << part[tmp2].y << "  ";
+			out << part[tmp2].z << "  ";
+			out << part[tmp2].cU << "  ";
+			out << part[tmp2].cV << "  ";
+			out << part[tmp2].cW << "  ";
+			out << part[tmp2].cRo << "  ";
+			out << part[tmp2].cP << "  ";
+			out << endl;
+		}
+	}
+}
+/*
 void Bucket::FluVelInFile(ofstream &out) {
 	int tmp1 = part.size();
 	for (int tmp2 = 0; tmp2 < tmp1; tmp2++) {
@@ -85,6 +135,7 @@ void Bucket::FluPInFile(ofstream &out) {
 		}
 	}
 }
+*/
 
 double Bucket::bucRiw(Particle& a)///////////////////////////////////
 {
