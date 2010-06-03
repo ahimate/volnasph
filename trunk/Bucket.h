@@ -12,7 +12,7 @@ using namespace std;
 class Bucket {
 public:
 	vector<Particle> part;
-	bool status;//1-пустой
+	bool status; // 1-пустой
 	double bucketX; // х-координата начала ячейки
 	double bucketY; // y-координата начала ячейки
 	double bucketZ; // z-координата начала ячейки
