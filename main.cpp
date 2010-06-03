@@ -9,8 +9,10 @@
 #include <stdlib.h>
 #include "Particle.h"
 #include "Bucket.h"
+#include "Vector3D.h"
 
 using namespace std;
+const float PI = 3.1415926358;
 
 double grdXmin, grdXmax, grdYmin, grdYmax, grdZmin, grdZmax;
 int parXcount, parYcount, parZcount; //число точек по x,y,z
@@ -42,7 +44,7 @@ int fluPmain = 101325;/////////////////////////////////
 /////////wall
 double wallRoo = 1000;//начальная плотность
 
-int kodir(double x, double y, double z)//c нуля,а количество с 1
+int getHash(double x, double y, double z)//c нуля,а количество с 1
 {
 	if ((x < wallXmin) || (x > (wallXmax + bucketRadius)) || (y < wallYmin)
 			|| (y > (wallYmax + bucketRadius))) {
@@ -56,7 +58,7 @@ int kodir(double x, double y, double z)//c нуля,а количество с 1
 		if ((xx < 999) && (yy < 999) && (zz < 999)) {
 			return xx * 1000000 + yy * 1000 + zz;
 		} else {
-			cout << "error kodir: count bucket is big" << endl;
+			cout << "error hash: count bucket is big" << endl;
 			return 0;
 		}
 	}
@@ -207,7 +209,7 @@ void inputData(const char* fluidSurfaceFileName,
 	particlesCount = (int) ((fluROOmain * Vall) / fluMmain);
 	double Vpar = Vall / particlesCount;
 	double parStep = pow(Vpar, 0.333333333);
-	tmp3 = (3 * Vall * kolvoParInRadX) / (4 * 3.1415926358 * particlesCount);
+	tmp3 = (3 * Vall * kolvoParInRadX) / (4 * PI * particlesCount);
 	bucketRadius = pow(tmp3, 0.33333333333);
 	out << "kolvoParN   " << particlesCount << endl;
 	out << "parStep   " << parStep << endl;
@@ -239,7 +241,7 @@ void inputData(const char* fluidSurfaceFileName,
 								+ bucketRadius))) {
 							//послед раз добавленные частицы-лишние отметаются
 						} else {
-							if (mapa.find(kodir(parx + tmpx, pary + tmpy, k))
+							if (mapa.find(getHash(parx + tmpx, pary + tmpy, k))
 									== mapa.end()) {
 								Bucket
 										b(int((parx + tmpx - wallXmin) / (2
@@ -253,11 +255,11 @@ void inputData(const char* fluidSurfaceFileName,
 														* bucketRadius)) * (2
 														* bucketRadius)
 														+ wallZmin);
-								mapa[kodir(parx + tmpx, pary + tmpy, k)] = b;
+								mapa[getHash(parx + tmpx, pary + tmpy, k)] = b;
 							}
-							mapa[kodir(parx + tmpx, pary + tmpy, k)].part.push_back(
+							mapa[getHash(parx + tmpx, pary + tmpy, k)].part.push_back(
 									a);
-							mapa[kodir(parx + tmpx, pary + tmpy, k)].status = 1;
+							mapa[getHash(parx + tmpx, pary + tmpy, k)].status = 1;
 						}
 					}
 				}
@@ -291,7 +293,7 @@ void inputData(const char* fluidSurfaceFileName,
 								+ bucketRadius))) {
 							//послед раз добавленные частицы-лишние отметаются
 						} else {
-							if (mapa.find(kodir(parx + tmpx, pary + tmpy, k))
+							if (mapa.find(getHash(parx + tmpx, pary + tmpy, k))
 									== mapa.end()) {
 								Bucket
 										b(int((parx + tmpx - wallXmin) / (2
@@ -305,11 +307,11 @@ void inputData(const char* fluidSurfaceFileName,
 														* bucketRadius)) * (2
 														* bucketRadius)
 														+ wallZmin);
-								mapa[kodir(parx + tmpx, pary + tmpy, k)] = b;
+								mapa[getHash(parx + tmpx, pary + tmpy, k)] = b;
 							}
-							mapa[kodir(parx + tmpx, pary + tmpy, k)].part.push_back(
+							mapa[getHash(parx + tmpx, pary + tmpy, k)].part.push_back(
 									a);
-							mapa[kodir(parx + tmpx, pary + tmpy, k)].status = 0;
+							mapa[getHash(parx + tmpx, pary + tmpy, k)].status = 0;
 						}
 					}
 				}
@@ -341,20 +343,20 @@ void updateBucket() {
 					count++;
 				}
 			} else {
-				if (mapa.find(kodir(tmpx, tmpy, tmpz)) == mapa.end()) {
+				if (mapa.find(getHash(tmpx, tmpy, tmpz)) == mapa.end()) {
 					Bucket a(int((tmpx - grdXmin) / (2 * bucketRadius)) * (2
 							* bucketRadius) + grdXmin, int((tmpy - grdYmin)
 							/ (2 * bucketRadius)) * (2 * bucketRadius)
 							+ grdYmin, int((tmpz - grdZmin)
 							/ (2 * bucketRadius)) * (2 * bucketRadius)
 							+ grdZmin);
-					mapa[kodir(tmpx, tmpy, tmpz)] = a;
+					mapa[getHash(tmpx, tmpy, tmpz)] = a;
 				}
-				mapa[kodir(tmpx, tmpy, tmpz)].part.push_back(
+				mapa[getHash(tmpx, tmpy, tmpz)].part.push_back(
 						(*it).second.part[i]);
 				if ((*it).second.part[i].type == 1) {
 					tmpcount++;
-					mapa[kodir(tmpx, tmpy, tmpz)].status = 0;
+					mapa[getHash(tmpx, tmpy, tmpz)].status = 0;
 				}
 			}
 		}
@@ -390,21 +392,22 @@ void BucketStep(double t) {
 					}
 				}
 
-			(*it).second.part[i].cRo = tmp1;
-			//			cout << tmp1 << " ";
-			//			if (tmp1 <= epsilon) {
-			//				cout << "Ro==0: " << i;
-			//				int tmp11;
-			//				cin >> tmp11;
-			//			}
-			//cout<<tmp1<<"  ";
+				(*it).second.part[i].cRo = tmp1;
+				//			cout << tmp1 << " ";
+				//			if (tmp1 <= epsilon) {
+				//				cout << "Ro==0: " << i;
+				//				int tmp11;
+				//				cin >> tmp11;
+				//			}
+				//cout<<tmp1<<"  ";
 
-			if ((*it).second.part[i].type == 1) {
-				(*it).second.part[i].cP = fluPmain + (*it).second.part[i].fluK
-						* ((*it).second.part[i].cRo
-								- (*it).second.part[i].fluROO);
-				//	cout<<(*it).second.part[i].cP<<endl;
-			}
+				if ((*it).second.part[i].type == 1) {
+					(*it).second.part[i].cP = fluPmain
+							+ (*it).second.part[i].fluK
+									* ((*it).second.part[i].cRo
+											- (*it).second.part[i].fluROO);
+					//	cout<<(*it).second.part[i].cP<<endl;
+				}
 			}
 		}
 	}
@@ -459,14 +462,16 @@ void inputParams(const char* input) {
 	}
 	in >> Particle::fluM >> Particle::fluNu >> Particle::fluROO
 			>> Particle::fluK >> Particle::wallM >> gridXstep >> gridYstep;
+	in.close();
 }
 int main(int argc, char** argv) {
+
 	if (argc != 4) {
 		cout << "Error argv" << endl;
 		cout
 				<< "Usage: volnasph fluidDataFileName wallDataFileName inputParametersFileName"
 				<< endl;
-		return 1;
+		return 0;
 	}
 	inputParams(argv[3]);
 	inputData(argv[1], argv[2], "Data.txt");//	inputData("f.grd","w.grd");
@@ -510,7 +515,6 @@ int main(int argc, char** argv) {
 		outputFileName.insert(0, "Flu_");
 		outputFluidData(mapa_new, outputFileName.c_str());
 		//		outputFluidParticles(mapa_new, fileName.c_str());
-
 
 		//		outputFluDataVel(mapa_new,"Flu_vel001.txt");
 		//		outputFluDataRo(mapa_new, "Flu_ro001.txt");
