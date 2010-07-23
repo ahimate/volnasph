@@ -1,28 +1,27 @@
 #include "Bucket.h"
+#include "constants.h"
 
-using namespace std;
-double eps = 1e-20; //погрешность
-double g = 9.80665;
 Bucket::Bucket() {
 	bucketX = bucketY = bucketZ = 0;
+	status = THERE_NO_FLUID;
 }
 Bucket::Bucket(double bucketX, double bucketY, double bucketZ) {
 	this->bucketX = bucketX;
 	this->bucketY = bucketY;
 	this->bucketZ = bucketZ;
-	status = 1;//не пустой
+	status = THERE_IS_FLUID;//there are fluid particles
 }
 void Bucket::BucketInFile(ofstream &out) {
-	int tmp1 = part.size();
-	for (int tmp2 = 0; tmp2 < tmp1; tmp2++) {
-		out << part[tmp2].x << "  ";
-		out << part[tmp2].y << "  ";
-		out << part[tmp2].z << "  ";
+	int numberOfParticles = part.size();
+	for (int i = 0; i < numberOfParticles; i++) {
+		out << part[i].x << "  ";
+		out << part[i].y << "  ";
+		out << part[i].z << "  ";
 		out << endl;
 	}
 }
 void Bucket::BucketParticlesInFile(ofstream &out) {
-	int tmp1 = part.size();
+	int numberOfParticles = part.size();
 	out << "x" << "  ";
 	out << "y" << "  ";
 	out << "z" << "  ";
@@ -32,56 +31,32 @@ void Bucket::BucketParticlesInFile(ofstream &out) {
 	out << "Ro" << "  ";
 	out << "P" << "  ";
 	out << endl;
-	for (int tmp2 = 0; tmp2 < tmp1; tmp2++) {
-		out << part[tmp2].x << "  ";
-		out << part[tmp2].y << "  ";
-		out << part[tmp2].z << "  ";
-		out << part[tmp2].cU << "  ";
-		out << part[tmp2].cV << "  ";
-		out << part[tmp2].cW << "  ";
-		out << part[tmp2].cRo << "  ";
-		out << part[tmp2].cP << "  ";
+	for (int i = 0; i < numberOfParticles; i++) {
+		out << part[i].x << "  ";
+		out << part[i].y << "  ";
+		out << part[i].z << "  ";
+		out << part[i].cU << "  ";
+		out << part[i].cV << "  ";
+		out << part[i].cW << "  ";
+		out << part[i].cRo << "  ";
+		out << part[i].cP << "  ";
 		out << endl;
 	}
 }
-/*
- void Bucket::BucketVelInFile(ofstream &out) {
- int tmp1 = part.size();
- for (int tmp2 = 0; tmp2 < tmp1; tmp2++) {
- out << part[tmp2].cU << "  ";
- out << part[tmp2].cV << "  ";
- out << part[tmp2].cW << "  ";
- out << endl;
- }
- }
- void Bucket::BucketRoInFile(ofstream &out) {
- int tmp1 = part.size();
- for (int tmp2 = 0; tmp2 < tmp1; tmp2++) {
- out << part[tmp2].cRo << "  ";
- out << endl;
- }
- }
- void Bucket::BucketPInFile(ofstream &out) {
- int tmp1 = part.size();
- for (int tmp2 = 0; tmp2 < tmp1; tmp2++) {
- out << part[tmp2].cP << "  ";
- out << endl;
- }
- }
- */
+
 void Bucket::FluInFile(ofstream &out) {
-	int tmp1 = part.size();
-	for (int tmp2 = 0; tmp2 < tmp1; tmp2++) {
-		if (part[tmp2].type == 1) {
-			out << part[tmp2].x << "  ";
-			out << part[tmp2].y << "  ";
-			out << part[tmp2].z << "  ";
+	int numberOfParticles = part.size();
+	for (int i = 0; i < numberOfParticles; i++) {
+		if (part[i].type == PARTICLE_TYPE_FLUID) {
+			out << part[i].x << "  ";
+			out << part[i].y << "  ";
+			out << part[i].z << "  ";
 			out << endl;
 		}
 	}
 }
 void Bucket::FluidParticlesInFile(ofstream &out) {
-	int tmp1 = part.size();
+	int numberOfParticles = part.size();
 	out << "x" << "  ";
 	out << "y" << "  ";
 	out << "z" << "  ";
@@ -91,67 +66,36 @@ void Bucket::FluidParticlesInFile(ofstream &out) {
 	out << "Ro" << "  ";
 	out << "P" << "  ";
 	out << endl;
-	for (int tmp2 = 0; tmp2 < tmp1; tmp2++) {
-		if (part[tmp2].type == 1) {
-			out << part[tmp2].x << "  ";
-			out << part[tmp2].y << "  ";
-			out << part[tmp2].z << "  ";
-			out << part[tmp2].cU << "  ";
-			out << part[tmp2].cV << "  ";
-			out << part[tmp2].cW << "  ";
-			out << part[tmp2].cRo << "  ";
-			out << part[tmp2].cP << "  ";
+	for (int i = 0; i < numberOfParticles; i++) {
+		if (part[i].type == PARTICLE_TYPE_FLUID) {
+			out << part[i].x << "  ";
+			out << part[i].y << "  ";
+			out << part[i].z << "  ";
+			out << part[i].cU << "  ";
+			out << part[i].cV << "  ";
+			out << part[i].cW << "  ";
+			out << part[i].cRo << "  ";
+			out << part[i].cP << "  ";
 			out << endl;
 		}
 	}
 }
-/*
-void Bucket::FluVelInFile(ofstream &out) {
-	int tmp1 = part.size();
-	for (int tmp2 = 0; tmp2 < tmp1; tmp2++) {
-		if (part[tmp2].type == 1) {
-			out << part[tmp2].cU << "  ";
-			out << part[tmp2].cV << "  ";
-			out << part[tmp2].cW << "  ";
-			out << endl;
-		}
-	}
-}
-void Bucket::FluRoInFile(ofstream &out) {
-	int tmp1 = part.size();
-	for (int tmp2 = 0; tmp2 < tmp1; tmp2++) {
-		if (part[tmp2].type == 1) {
-			out << part[tmp2].cRo << "  ";
-			out << endl;
-		}
-	}
-}
-void Bucket::FluPInFile(ofstream &out) {
-	int tmp1 = part.size();
-	for (int tmp2 = 0; tmp2 < tmp1; tmp2++) {
-		if (part[tmp2].type == 1) {
-			out << part[tmp2].cP << "  ";
-			out << endl;
-		}
-	}
-}
-*/
 
-double Bucket::bucRiw(Particle& a)///////////////////////////////////
+double Bucket::bucRiw(Particle& a)//
 {
-	if (a.type == 1)//а- флюид
+	if (a.type == PARTICLE_TYPE_FLUID)//if а - fluid
 	{
 		double riw = a.getDistance(a, part[0]);
-		int part_size = part.size();
-		for (int i = 1; i < part_size; i++) {
-			if (part[i].type == 0)//склон
+		int numberOfParticles = part.size();
+		for (int i = 1; i < numberOfParticles; i++) {
+			if (part[i].type == PARTICLE_TYPE_WALL)//slope
 			{
 				if (a.getDistance(a, part[i]) < riw) {
 					riw = a.getDistance(a, part[i]);
 				}
 			}
 		}
-		cout << riw << "  ";
+//		cout << "Riw=" << riw << "  ";
 		return riw;
 	} else {
 		return 0;
@@ -159,23 +103,22 @@ double Bucket::bucRiw(Particle& a)///////////////////////////////////
 }
 double Bucket::bucDen(Particle& a, double re) {
 	double ro = 0;
-	if (a.type == 1) {
-		if (status == 0)//там есть частицы склона
+	if (a.type == PARTICLE_TYPE_FLUID) {
+		if (status == THERE_IS_FLUID) // there are fluid particles
 		{
-			int part_size = part.size();
-			for (int i = 0; i < part_size; i++) {
-				if (part[i].type == 1)//поток
-				{
-					if ((abs(a.x - part[i].x) > eps) && (abs(a.y - part[i].y)
-							> eps) && (abs(a.z - part[i].z) > eps)) {
+			int numberOfParticles = part.size();
+			for (int i = 0; i < numberOfParticles; i++) {
+//				if (part[i].type == PARTICLE_TYPE_FLUID)//a fluid flow
+//				{
+					if (a.getDistance(a, part[i]) > epsilon) {
 						ro += a.fluRo(a, part[i], re);
 					}
-				} else {
-					//	wallm=part[i].wallM;
-				}
+//				} else {
+//					wallm=part[i].wallM; //boundary by Harada
+//				}
 			}
 		}
-		///граница
+		//boundary by Harada
 		/*
 		 if(wallm!=0)
 		 {
@@ -186,21 +129,21 @@ double Bucket::bucDen(Particle& a, double re) {
 	}
 	return ro;
 }
-void Bucket::bucForse(Particle& a, double re, double res[6])//производная частная пока
+
+void Bucket::bucForse(Particle& a, double re, double result[6])//производная частная пока
 {
-	int part_size = part.size();
-	if ((a.type == 1) && (status == 0))//там есть частицы склона
+	int numberOfParticles = part.size();
+	if ((a.type == PARTICLE_TYPE_FLUID) && (status == THERE_IS_FLUID))//там есть частицы склона
 	{
-		for (int i = 0; i < part_size; i++) {
-			if ((part[i].type == 1) && (abs(a.x - part[i].x) > eps) && (abs(a.y
-					- part[i].y) > eps) && (abs(a.z - part[i].z) > eps)) {
-				res[0] += a.fluFpress(a, part[i], re, a.x - part[i].x);//presx
-				res[1] += a.fluFpress(a, part[i], re, a.y - part[i].y);//presy
-				res[2] += a.fluFpress(a, part[i], re, a.z - part[i].z);//presz
-				res[3] += a.fluFvis(a, part[i], re, part[i].cU - a.cU);//visx
-				res[4] += a.fluFvis(a, part[i], re, part[i].cV - a.cV);//visy
-				res[5] += a.fluFvis(a, part[i], re, part[i].cW - a.cW);//visz
-			} else//граничное--
+		for (int i = 0; i < numberOfParticles; i++) {
+			if ((part[i].type == PARTICLE_TYPE_FLUID) && (a.getDistance(a, part[i]) > epsilon)) {
+				result[0] += a.fluFpress(a, part[i], re, a.x - part[i].x);//presx
+				result[1] += a.fluFpress(a, part[i], re, a.y - part[i].y);//presy
+				result[2] += a.fluFpress(a, part[i], re, a.z - part[i].z);//presz
+				result[3] += a.fluFvis(a, part[i], re, part[i].cU - a.cU);//visx
+				result[4] += a.fluFvis(a, part[i], re, part[i].cV - a.cV);//visy
+				result[5] += a.fluFvis(a, part[i], re, part[i].cW - a.cW);//visz
+			} else // boundary condition (?)
 			{
 
 			}
@@ -208,8 +151,36 @@ void Bucket::bucForse(Particle& a, double re, double res[6])//производн
 	}
 }
 
+void Bucket::bucFnorm(Particle& a,double re,double result[3])
+{
+	int numberOfParticles=part.size();
+//	if(status==0)
+//	{
+		for(int i=0;i<numberOfParticles;i++)
+		{
+			result[0]+=a.fluNorm(a,part[i],re,a.x-part[i].x);
+			result[1]+=a.fluNorm(a,part[i],re,a.y-part[i].y);
+			result[2]+=a.fluNorm(a,part[i],re,a.z-part[i].z);
+		}
+//	}
+}
+
+double Bucket::bucFsurf(Particle& a,double re)
+{
+	int numberOfParticles=part.size();
+	double result=0;
+	if(status==THERE_IS_FLUID)
+	{
+		for(int i=0;i<numberOfParticles;i++)
+		{
+			result+=a.fluFsur(a,part[i],re);
+		}
+	}
+	return result;
+}
+
 void Bucket::bucPosition(Particle& a, double timestep) {
-	if (a.type == 1) {
+	if (a.type == PARTICLE_TYPE_FLUID) {
 		a.x = a.x + a.cU * timestep;
 		a.y = a.y + a.cV * timestep;
 		a.z = a.z + a.cW * timestep;
