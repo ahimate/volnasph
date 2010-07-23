@@ -1,0 +1,7 @@
+kolvoParN flu   2941
+parStep   0.0271447
+bucRadius   0.0457087
+fluM 0.02
+wallM  0.0520031
+created number of fluid particles 2070
+real fluid particle mass 0.0284172

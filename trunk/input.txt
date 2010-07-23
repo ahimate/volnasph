@@ -1,23 +1,25 @@
 0.005
-5000
+100
 2
-0.00000001
 6
 3.5
 5
 1000
 2600
 20
-6000
+flu.grd
+wall.grd
+Data.txt
 
 timestep
 kolvotimestep
 steptimeout
-epsil;
 Particle::fluNu
 sigma
 Particle::fluK;
 Particle::fluROO
 Particle::wallROO;
 kolvoParInRadX
-kolvoParN
+fluidSurfaceFileName
+wallSurfaceFileName
+out dataname
