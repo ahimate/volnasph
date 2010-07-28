@@ -1,7 +1,310 @@
-kolvoParN flu   2941
-parStep   0.0271447
-bucRadius   0.0457087
+wallXmin wallXmax wallYmin wallYmax wallZmin wallZmax
+0	0.9	0	0.5	0.7	1
+kolvoParN flu   2935
+parStep   0.0271632
+bucRadius   0.0457399
 fluM 0.02
-wallM  0.0520031
+wallM  0.0429026
 created number of fluid particles 2070
-real fluid particle mass 0.0284172
+real fluid particle mass 0.0283603
+t   1
+FINISHING density and press
+T: 1  particles: 2070 free: 0
+t   2
+FINISHING density and press
+T: 2  particles: 2070 free: 0
+t   3
+FINISHING density and press
+T: 3  particles: 2070 free: 0
+t   4
+FINISHING density and press
+T: 4  particles: 2070 free: 0
+t   5
+FINISHING density and press
+T: 5  particles: 2068 free: 2
+t   6
+FINISHING density and press
+T: 6  particles: 2034 free: 34
+t   7
+FINISHING density and press
+T: 7  particles: 1895 free: 139
+t   8
+FINISHING density and press
+T: 8  particles: 1640 free: 255
+t   9
+FINISHING density and press
+T: 9  particles: 1431 free: 209
+t   10
+FINISHING density and press
+T: 10  particles: 1252 free: 179
+t   11
+FINISHING density and press
+T: 11  particles: 1106 free: 146
+t   12
+FINISHING density and press
+T: 12  particles: 972 free: 134
+t   13
+FINISHING density and press
+T: 13  particles: 887 free: 85
+t   14
+FINISHING density and press
+T: 14  particles: 820 free: 67
+t   15
+FINISHING density and press
+T: 15  particles: 760 free: 60
+t   16
+FINISHING density and press
+T: 16  particles: 712 free: 48
+t   17
+FINISHING density and press
+T: 17  particles: 671 free: 41
+t   18
+FINISHING density and press
+T: 18  particles: 626 free: 45
+t   19
+FINISHING density and press
+T: 19  particles: 597 free: 29
+t   20
+FINISHING density and press
+T: 20  particles: 575 free: 22
+t   21
+FINISHING density and press
+T: 21  particles: 545 free: 30
+t   22
+FINISHING density and press
+T: 22  particles: 526 free: 19
+t   23
+FINISHING density and press
+T: 23  particles: 510 free: 16
+t   24
+FINISHING density and press
+T: 24  particles: 500 free: 10
+t   25
+FINISHING density and press
+T: 25  particles: 486 free: 14
+t   26
+FINISHING density and press
+T: 26  particles: 472 free: 14
+t   27
+FINISHING density and press
+T: 27  particles: 459 free: 13
+t   28
+FINISHING density and press
+T: 28  particles: 454 free: 5
+t   29
+FINISHING density and press
+T: 29  particles: 448 free: 6
+t   30
+FINISHING density and press
+T: 30  particles: 438 free: 10
+t   31
+FINISHING density and press
+T: 31  particles: 423 free: 15
+t   32
+FINISHING density and press
+T: 32  particles: 416 free: 7
+t   33
+FINISHING density and press
+T: 33  particles: 414 free: 2
+t   34
+FINISHING density and press
+T: 34  particles: 405 free: 9
+t   35
+FINISHING density and press
+T: 35  particles: 399 free: 6
+t   36
+FINISHING density and press
+T: 36  particles: 390 free: 9
+t   37
+FINISHING density and press
+T: 37  particles: 378 free: 12
+t   38
+FINISHING density and press
+T: 38  particles: 363 free: 15
+t   39
+FINISHING density and press
+T: 39  particles: 357 free: 6
+t   40
+FINISHING density and press
+T: 40  particles: 353 free: 4
+t   41
+FINISHING density and press
+T: 41  particles: 348 free: 5
+t   42
+FINISHING density and press
+T: 42  particles: 346 free: 2
+t   43
+FINISHING density and press
+T: 43  particles: 346 free: 0
+t   44
+FINISHING density and press
+T: 44  particles: 344 free: 2
+t   45
+FINISHING density and press
+T: 45  particles: 342 free: 2
+t   46
+FINISHING density and press
+T: 46  particles: 338 free: 4
+t   47
+FINISHING density and press
+T: 47  particles: 335 free: 3
+t   48
+FINISHING density and press
+T: 48  particles: 334 free: 1
+t   49
+FINISHING density and press
+T: 49  particles: 332 free: 2
+t   50
+FINISHING density and press
+T: 50  particles: 332 free: 0
+t   51
+FINISHING density and press
+T: 51  particles: 332 free: 0
+t   52
+FINISHING density and press
+T: 52  particles: 332 free: 0
+t   53
+FINISHING density and press
+T: 53  particles: 330 free: 2
+t   54
+FINISHING density and press
+T: 54  particles: 330 free: 0
+t   55
+FINISHING density and press
+T: 55  particles: 329 free: 1
+t   56
+FINISHING density and press
+T: 56  particles: 329 free: 0
+t   57
+FINISHING density and press
+T: 57  particles: 329 free: 0
+t   58
+FINISHING density and press
+T: 58  particles: 329 free: 0
+t   59
+FINISHING density and press
+T: 59  particles: 327 free: 2
+t   60
+FINISHING density and press
+T: 60  particles: 326 free: 1
+t   61
+FINISHING density and press
+T: 61  particles: 326 free: 0
+t   62
+FINISHING density and press
+T: 62  particles: 324 free: 2
+t   63
+FINISHING density and press
+T: 63  particles: 324 free: 0
+t   64
+FINISHING density and press
+T: 64  particles: 323 free: 1
+t   65
+FINISHING density and press
+T: 65  particles: 323 free: 0
+t   66
+FINISHING density and press
+T: 66  particles: 322 free: 1
+t   67
+FINISHING density and press
+T: 67  particles: 320 free: 2
+t   68
+FINISHING density and press
+T: 68  particles: 320 free: 0
+t   69
+FINISHING density and press
+T: 69  particles: 319 free: 1
+t   70
+FINISHING density and press
+T: 70  particles: 318 free: 1
+t   71
+FINISHING density and press
+T: 71  particles: 318 free: 0
+t   72
+FINISHING density and press
+T: 72  particles: 318 free: 0
+t   73
+FINISHING density and press
+T: 73  particles: 318 free: 0
+t   74
+FINISHING density and press
+T: 74  particles: 318 free: 0
+t   75
+FINISHING density and press
+T: 75  particles: 318 free: 0
+t   76
+FINISHING density and press
+T: 76  particles: 316 free: 2
+t   77
+FINISHING density and press
+T: 77  particles: 314 free: 2
+t   78
+FINISHING density and press
+T: 78  particles: 314 free: 0
+t   79
+FINISHING density and press
+T: 79  particles: 314 free: 0
+t   80
+FINISHING density and press
+T: 80  particles: 312 free: 2
+t   81
+FINISHING density and press
+T: 81  particles: 311 free: 1
+t   82
+FINISHING density and press
+T: 82  particles: 311 free: 0
+t   83
+FINISHING density and press
+T: 83  particles: 310 free: 1
+t   84
+FINISHING density and press
+T: 84  particles: 310 free: 0
+t   85
+FINISHING density and press
+T: 85  particles: 310 free: 0
+t   86
+FINISHING density and press
+T: 86  particles: 310 free: 0
+t   87
+FINISHING density and press
+T: 87  particles: 310 free: 0
+t   88
+FINISHING density and press
+T: 88  particles: 310 free: 0
+t   89
+FINISHING density and press
+T: 89  particles: 310 free: 0
+t   90
+FINISHING density and press
+T: 90  particles: 310 free: 0
+t   91
+FINISHING density and press
+T: 91  particles: 310 free: 0
+t   92
+FINISHING density and press
+T: 92  particles: 310 free: 0
+t   93
+FINISHING density and press
+T: 93  particles: 310 free: 0
+t   94
+FINISHING density and press
+T: 94  particles: 310 free: 0
+t   95
+FINISHING density and press
+T: 95  particles: 310 free: 0
+t   96
+FINISHING density and press
+T: 96  particles: 310 free: 0
+t   97
+FINISHING density and press
+T: 97  particles: 309 free: 1
+t   98
+FINISHING density and press
+T: 98  particles: 309 free: 0
+t   99
+FINISHING density and press
+T: 99  particles: 309 free: 0
+t   100
+FINISHING density and press
+T: 100  particles: 309 free: 0
+Finished

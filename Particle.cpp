@@ -1,7 +1,6 @@
 #include "Particle.h"
 #include "constants.h"
 
-
 double koefWroo = 315/(64*pi); //1.566681480; //
 double koefWpres = 14.32394496; // 45/pi
 double koefWvis = 14.32394496; // 45/pi
@@ -23,7 +22,7 @@ Particle::Particle(double _x, double _y, double _z) {
 	cU = 0;
 	cV = 0;
 	cW = 0;
-	cRo = 0;
+	cRo = wallROO;
 	cP = 0;
 	type = PARTICLE_TYPE_WALL;
 }
@@ -73,12 +72,12 @@ double Particle::fluFvis(Particle& a, Particle& b, double re, double ba) {
 		} else {
 			return b.wallM * Wvis * ba / b.cRo;
 		}
-		return b.fluM * Wvis * ba / b.cRo;
+		return 0;
 	}
 }
 
 double Particle::fluRo(Particle& a, Particle& b, double re) {
-	double distance = getDistance(a, b);
+	double distance = a.getDistance(a, b);
 	if (distance > re) {
 		return 0;
 	} else {
