@@ -15,7 +15,7 @@ using namespace std;
 
 class Bucket {
 public:
-	vector<Particle> part;
+	vector<Particle> particlesVector;
 	bool status; // THERE_IS_FLUID or THERE_NO_FLUID
 	double bucketX; // beginning х-coordinate
 	double bucketY; // beginning y-coordinate
@@ -24,16 +24,13 @@ public:
 	Bucket();
 	Bucket(double bucketX, double bucketY, double bucketZ);
 
-	void BucketInFile(ofstream &out);
-	void BucketParticlesInFile (ofstream &out);
-
-	void FluInFile(ofstream &out);
-	void FluidParticlesInFile (ofstream &out);
+	void BucketParticlesInFile(ofstream &out);
+	void FluidParticlesInFile(ofstream &out);
 
 	double bucDen(Particle& a, double re);
 	void bucForse(Particle& a, double re, double res[6]);
-	void bucFnorm(Particle& a,double re,double res[3]);
-	double bucFsurf(Particle& a,double re);
+	void bucFnorm(Particle& a, double re, double res[3]);
+	double bucFsurf(Particle& a, double re);
 
 	double bucRiw(Particle& a);
 	void bucPosition(Particle& a, double timestep);
