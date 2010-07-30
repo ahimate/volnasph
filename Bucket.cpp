@@ -68,18 +68,18 @@ double Bucket::bucDen(Particle& a, double re) {
 	//if (a.type == PARTICLE_TYPE_FLUID) { //change density for all particles, not only for fluid
 	//		if (status == THERE_IS_FLUID) // there are fluid particles // all particles influence on density
 	//		{
-		int numberOfParticles = particlesVector.size();
-		for (int i = 0; i < numberOfParticles; i++) {
-			//	if (particlesVector[i].type == PARTICLE_TYPE_FLUID)//a fluid flow // this is being checking in fluRo() function
-			//	{
-			//if (a.getDistance(a, particlesVector[i]) > epsilon) { //do not need this check for density
-			ro += a.fluRo(a, particlesVector[i], re);
-			//}
-			//	} else {
-			//		wallm = particlesVector[i].wallM; //boundary by
-			//	}
-		}
-		//		}
+	int numberOfParticles = particlesVector.size();
+	for (int i = 0; i < numberOfParticles; i++) {
+		//	if (particlesVector[i].type == PARTICLE_TYPE_FLUID)//a fluid flow // this is being checking in fluRo() function
+		//	{
+		//if (a.getDistance(a, particlesVector[i]) > epsilon) { //do not need this check for density
+		ro += a.fluRo(a, particlesVector[i], re);
+		//}
+		//	} else {
+		//		wallm = particlesVector[i].wallM; //boundary by
+		//	}
+	}
+	//		}
 	//}
 	return ro;
 }
@@ -87,53 +87,54 @@ double Bucket::bucDen(Particle& a, double re) {
 void Bucket::bucForse(Particle& a, double re, double result[6])//производная частная пока
 {
 	int numberOfParticles = particlesVector.size();
-//	if ((a.type == PARTICLE_TYPE_FLUID) && (status == THERE_IS_FLUID))//там есть частицы склона
-//	{
-		for (int i = 0; i < numberOfParticles; i++) {
-	//		if ((particlesVector[i].type == PARTICLE_TYPE_FLUID)
+	//	if ((a.type == PARTICLE_TYPE_FLUID) && (status == THERE_IS_FLUID))//там есть частицы склона
+	//	{
+	for (int i = 0; i < numberOfParticles; i++) {
+		//		if ((particlesVector[i].type == PARTICLE_TYPE_FLUID)
 		//			&& (a.getDistance(a, particlesVector[i]) > epsilon)) {
-				if (a.getDistance(a, particlesVector[i]) > epsilon) {
-				result[0] += a.fluFpress(a, particlesVector[i], re, a.x
-						- particlesVector[i].x);//presx
-				result[1] += a.fluFpress(a, particlesVector[i], re, a.y
-						- particlesVector[i].y);//presy
-				result[2] += a.fluFpress(a, particlesVector[i], re, a.z
-						- particlesVector[i].z);//presz
-				result[3] += a.fluFvis(a, particlesVector[i], re,
-						particlesVector[i].cU - a.cU);//visx
-				result[4] += a.fluFvis(a, particlesVector[i], re,
-						particlesVector[i].cV - a.cV);//visy
-				result[5] += a.fluFvis(a, particlesVector[i], re,
-						particlesVector[i].cW - a.cW);//visz
-			} else // collision or the same particle
-			{
+		if ((a.getDistance(a, particlesVector[i]) > epsilon) && (a.getDistance(
+				a, particlesVector[i]) < re)) {
+			result[0] += a.fluFpress(a, particlesVector[i], re, a.x
+					- particlesVector[i].x);//presx
+			result[1] += a.fluFpress(a, particlesVector[i], re, a.y
+					- particlesVector[i].y);//presy
+			result[2] += a.fluFpress(a, particlesVector[i], re, a.z
+					- particlesVector[i].z);//presz
+			result[3] += a.fluFvis(a, particlesVector[i], re,
+					particlesVector[i].cU - a.cU);//visx
+			result[4] += a.fluFvis(a, particlesVector[i], re,
+					particlesVector[i].cV - a.cV);//visy
+			result[5] += a.fluFvis(a, particlesVector[i], re,
+					particlesVector[i].cW - a.cW);//visz
+		} else // collision or the same particle
+		{
 
-			}
 		}
-//	}
+	}
+	//	}
 }
 
 void Bucket::bucFnorm(Particle& a, double re, double result[3]) {
 	int numberOfParticles = particlesVector.size();
-//	if (status == THERE_IS_FLUID) {
-		for (int i = 0; i < numberOfParticles; i++) {
-			result[0] += a.fluNorm(a, particlesVector[i], re, a.x
-					- particlesVector[i].x);
-			result[1] += a.fluNorm(a, particlesVector[i], re, a.y
-					- particlesVector[i].y);
-			result[2] += a.fluNorm(a, particlesVector[i], re, a.z
-					- particlesVector[i].z);
-		}
-//	}
+	//	if (status == THERE_IS_FLUID) {
+	for (int i = 0; i < numberOfParticles; i++) {
+		result[0] += a.fluNorm(a, particlesVector[i], re, a.x
+				- particlesVector[i].x);
+		result[1] += a.fluNorm(a, particlesVector[i], re, a.y
+				- particlesVector[i].y);
+		result[2] += a.fluNorm(a, particlesVector[i], re, a.z
+				- particlesVector[i].z);
+	}
+	//	}
 }
 
 double Bucket::bucFsurf(Particle& a, double re) {
 	int numberOfParticles = particlesVector.size();
 	double result = 0;
-//	if (status == THERE_IS_FLUID) {
-		for (int i = 0; i < numberOfParticles; i++) {
-			result += a.fluFsur(a, particlesVector[i], re);
-//		}
+	//	if (status == THERE_IS_FLUID) {
+	for (int i = 0; i < numberOfParticles; i++) {
+		result += a.fluFsur(a, particlesVector[i], re);
+		//		}
 	}
 	return result;
 }

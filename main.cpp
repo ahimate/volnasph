@@ -281,28 +281,32 @@ void inputData(char* fluidSurfaceFileName, char* wallSurfaceFileName,
 					- wallYmin) / wallYStep)];
 			double tmp4 = flu[(int) ((tX - grdXmin) / fluXStep)][(int) ((tY
 					- grdYmin) / fluYStep)];
-			elementsCount = tmp1 + tmp4;
-			for (double k = tmp1; k <= elementsCount; k += parStep) {
-				if ((tY >= (wallYmin + bucketRadius)) && (tY <= (wallYmax
-						- bucketRadius)) && (tX >= (wallXmin + bucketRadius))
-						&& (tX <= (wallXmax - bucketRadius))) {
-					Particle a(tX, tY, k, 0, 0, 0);
-					tmp5++;
-					a.cP = Particle::fluROO * g * (elementsCount - k);
-					a.cU5 = a.cU;
-					a.cV5 = a.cV;
-					a.cW5 = a.cW;
-					if (mapa.find(getHash(tX, tY, k, out)) == mapa.end()) {
-						Bucket b(int((tX - wallXmin) / (2 * bucketRadius)) * (2
-								* bucketRadius) + wallXmin, int((tY - wallYmin)
-								/ (2 * bucketRadius)) * (2 * bucketRadius)
-								+ wallYmin, int((k - wallZmin) / (2
-								* bucketRadius)) * (2 * bucketRadius)
-								+ wallZmin);
-						mapa[getHash(tX, tY, k, out)] = b;
+			if (tmp4 > 0.01) {
+				elementsCount = tmp1 + tmp4;
+				for (double k = tmp1; k <= elementsCount; k += parStep) {
+					if ((tY >= (wallYmin + bucketRadius)) && (tY <= (wallYmax
+							- bucketRadius)) && (tX
+							>= (wallXmin + bucketRadius)) && (tX <= (wallXmax
+							- bucketRadius))) {
+						Particle a(tX, tY, k, 0, 0, 0);
+						tmp5++;
+						a.cP = Particle::fluROO * g * (elementsCount - k);
+						a.cU5 = a.cU;
+						a.cV5 = a.cV;
+						a.cW5 = a.cW;
+						if (mapa.find(getHash(tX, tY, k, out)) == mapa.end()) {
+							Bucket b(int((tX - wallXmin) / (2 * bucketRadius))
+									* (2 * bucketRadius) + wallXmin, int((tY
+									- wallYmin) / (2 * bucketRadius)) * (2
+									* bucketRadius) + wallYmin, int((k
+									- wallZmin) / (2 * bucketRadius)) * (2
+									* bucketRadius) + wallZmin);
+							mapa[getHash(tX, tY, k, out)] = b;
+						}
+						mapa[getHash(tX, tY, k, out)].particlesVector.push_back(
+								a);
+						mapa[getHash(tX, tY, k, out)].status = THERE_IS_FLUID;
 					}
-					mapa[getHash(tX, tY, k, out)].particlesVector.push_back(a);
-					mapa[getHash(tX, tY, k, out)].status = THERE_IS_FLUID;
 				}
 			}
 		}
@@ -345,12 +349,13 @@ void updateBucket(int time, ofstream &out) {
 			double tmpz = (*it).second.particlesVector[i].z;
 
 			if ((*it).second.particlesVector[i].type == PARTICLE_TYPE_FLUID) {
-				//			if ((tmpx < wallXmin) || (tmpx > wallXmax) || (tmpy < wallYmin)
-				//					|| (tmpy > wallYmax) || (tmpz < (wallZmin - bucketRadius))
-				//					|| (tmpz > (wallZmax + grdZmax + 2 * bucketRadius))) {
 				if ((tmpx < wallXmin) || (tmpx > wallXmax) || (tmpy < wallYmin)
 						|| (tmpy > wallYmax) || (tmpz < (wallZmin
-						- bucketRadius))) {
+						- bucketRadius)) || (tmpz > (wallZmax + grdZmax + 2
+						* bucketRadius))) {
+					//		if ((tmpx < wallXmin) || (tmpx > wallXmax) || (tmpy < wallYmin)
+					//				|| (tmpy > wallYmax) || (tmpz < (wallZmin
+					//				- bucketRadius))) {
 					//точку вне области не считаем
 
 					count++;
@@ -496,10 +501,9 @@ void BucketStep(ofstream &out) {
 										(*it).second.particlesVector[i],
 										bucketRadius, fs);
 
-								for (int k = 0; k < 6; k++) {
-									forse[k] += f[k];
-								}
 								for (int k = 0; k < 3; k++) {
+									forse[k] += f[k];
+									forse[k + 3] += f[k + 3];
 									nsurf[k] += fs[k];
 								}
 							}
@@ -508,8 +512,8 @@ void BucketStep(ofstream &out) {
 					}
 				}
 				double ni2 = pow(nsurf[0], 2) + pow(nsurf[1], 2) + pow(
-						nsurf[2], 2);
-				double surL2 = sqrt((Particle::fluROO) / kolvoParInRadX);
+						nsurf[2], 2); //module of normal calculated
+				double surL2 = sqrt((Particle::fluROO) / kolvoParInRadX); //threshold
 				if (ni2 >= surL2) {
 					for (int x1 = -1; x1 < 2; x1++) {
 						for (int x2 = -1; x2 < 2; x2++) {
@@ -530,13 +534,14 @@ void BucketStep(ofstream &out) {
 					fsurf /= sqrt(ni2);
 				}
 				double acceleration[3] = { 0, 0, 0 };
-				double gravity[3] = { 0, 0, g };
+				double gravity[3] = { 0, 0, 0 };
+				gravity[2] = (-1) * g;
 				for (int k = 0; k < 3; k++) {
 					acceleration[k] = forse[k]
 							+ ((*it).second.particlesVector[i].fluNu * forse[k
-									+ 3] - sigma * nsurf[k] * fsurf
-									- gravity[k])
-									/ (*it).second.particlesVector[i].cRo;
+									+ 3] - sigma * nsurf[k] * fsurf)
+									/ (*it).second.particlesVector[i].cRo
+							+ gravity[k];
 				}
 				//save velocity/2 on (t-0.5dt)
 				(*it).second.particlesVector[i].cU = 0.5
@@ -586,8 +591,8 @@ int main(int argc, char* argv[]) {
 	}
 	inputParams(argv[1]);
 	ofstream out(outDataName, ios::app);
-	outputFluidParticles(mapa, "Flu_000.txt");
-	outputParticles(mapa, "All_000.txt");
+	outputFluidParticles(mapa, "00000_flu.txt");
+	outputParticles(mapa, "00000_flu.txt");
 	for (int t = 1; t <= stepCount; t++) {
 		cout << "t   " << t << endl;
 		out << "t   " << t << endl;
@@ -596,8 +601,8 @@ int main(int argc, char* argv[]) {
 			char outname[30];
 			sprintf(outname, "\%05d_flu.txt", t);
 			outputFluidParticles(mapa, outname);
-			sprintf(outname, "\%05d_all.txt", t);
-			outputParticles(mapa, outname);
+			//		sprintf(outname, "\%05d_all.txt", t);
+			//		outputParticles(mapa, outname);
 		}
 		updateBucket(t, out);
 		//		char tmpch;
