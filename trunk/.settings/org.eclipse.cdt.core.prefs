@@ -1,4 +1,4 @@
-#Fri Jul 23 19:41:43 MSD 2010
+#Thu Jul 29 16:21:50 MSD 2010
 eclipse.preferences.version=1
-environment/project/cdt.managedbuild.config.gnu.exe.debug.1451059662=<?xml version\="1.0" encoding\="UTF-8" standalone\="no"?>\r\n<environment append\="true" appendContributed\="true">\r\n<variable delimiter\=";" name\="PATH" operation\="append" value\="C\:\\MinGW\\bin"/>\r\n</environment>\r\n
+environment/project/cdt.managedbuild.config.gnu.exe.debug.1451059662=<?xml version\="1.0" encoding\="UTF-8" standalone\="no"?>\n<environment append\="true" appendContributed\="true">\n<variable delimiter\=";" name\="PATH" operation\="replace" value\="/usr/bin\:/bin\:/usr/sbin\:/sbin;C\:\\MinGW\\bin"/>\n</environment>\n
 environment/project/cdt.managedbuild.config.gnu.exe.release.511319848=<?xml version\="1.0" encoding\="UTF-8" standalone\="no"?>\r\n<environment append\="true" appendContributed\="true">\r\n<variable delimiter\=";" name\="PATH" operation\="append" value\="C\:\\MinGW\\bin"/>\r\n</environment>\r\n

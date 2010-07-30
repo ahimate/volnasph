@@ -63,7 +63,7 @@ double Particle::fluFpress(Particle& a, Particle& b, double re, double ba) {
 
 double Particle::fluFvis(Particle& a, Particle& b, double re, double ba) {
 	double distance = Particle::getDistance(a, b);
-	if ((distance > re) || (distance == 0)) {
+	if (distance > re) {
 		return 0;
 	} else {
 		double Wvis = koefWvis * (re - distance) / (pow(re, 6));
