@@ -2,14 +2,16 @@
  * Vector3D.cpp
  *
  *  Created on: 03.06.2010
- *      Author: ilya
+ *  Updated on: 26.08.2010
+ *      Author: Ilya Kryukov
  */
 
 #include "Vector3D.h"
 
-Vector3D::Vector3D() {
-	// TODO Auto-generated constructor stub
+Vector3D::Vector3D() 
+{
 	x = y = z = 0;
+	w = 1;
 }
 
 void Vector3D::setZ(double z) {
@@ -36,39 +38,63 @@ Vector3D::Vector3D(double x, double y, double z) {
 	this->x = x;
 	this->y = y;
 	this->z = z;
+	w = 1;
 }
 
 void Vector3D::setX(double x) {
 	this->x = x;
 }
 
-Vector3D operator +(Vector3D& a, Vector3D& b) {
-	return Vector3D(a.getX() + b.getX(), a.getY() + b.getY(), a.getZ()
-			+ b.getZ());
-}
-Vector3D operator -(Vector3D& a, Vector3D& b) {
-	return Vector3D(a.getX() - b.getX(), a.getY() - b.getY(), a.getZ()
-			- b.getZ());
-}
-Vector3D operator*(Vector3D& a, double k) {
-	return Vector3D(a.getX() * k, a.getY() * k, a.getZ() * k);
-}
-Vector3D operator*(double k, Vector3D& a) {
-	return Vector3D(a.getX() * k, a.getY() * k, a.getZ() * k);
+Vector3D operator +(Vector3D& a, Vector3D& b) 
+{
+	return Vector3D(a.x + b.x, a.y + b.y, a.z + b.z);
 }
 
-double Vector3D::abs(void) const {
+Vector3D operator -(Vector3D& a, Vector3D& b) 
+{
+	return Vector3D(a.x - b.x, a.y - b.y, a.z - b.z);
+}
+
+Vector3D operator*(Vector3D& a, double k) 
+{
+	return Vector3D(a.x * k, a.y * k, a.z * k);
+}
+
+Vector3D operator*(double k, Vector3D& a) 
+{
+	return Vector3D(a.x * k, a.y * k, a.z * k);
+}
+
+Vector3D operator+=(Vector3D& a, Vector3D& b)
+{
+	a.x += b.x;
+	a.y += b.y;
+	a.z += b.z;
+	return a;
+}
+
+Vector3D operator-=(Vector3D& a, Vector3D& b)
+{
+	a.x -= b.x;
+	a.y -= b.y;
+	a.z -= b.z;
+	return a;
+}
+
+double Vector3D::abs(void) const 
+{
 	return sqrt(x * x + y * y + z * z);
 }
-Vector3D scalarMul(Vector3D& a, Vector3D& b) {
-	return Vector3D(a.getX() * b.getX(), a.getY() * b.getY(), a.getZ()
-			* b.getZ());
+
+Vector3D scalarMul(Vector3D& a, Vector3D& b) 
+{
+	return Vector3D(a.x * b.x, a.y * b.y, a.z * b.z);
 }
-Vector3D vectorMul(Vector3D& a, Vector3D& b) {
-	return Vector3D(a.getY() * b.getZ() - a.getZ() * b.getY(), a.getZ()
-			* b.getX() - a.getX() * b.getZ(), a.getX() * b.getY() - a.getY()
-			* b.getX());
+
+Vector3D vectorMul(Vector3D& a, Vector3D& b) 
+{
+	return Vector3D(a.y * b.z - a.z * b.y, a.z * b.x - a.x * b.z, a.x * b.y - a.y * b.x);
 }
+
 Vector3D::~Vector3D() {
-	// TODO Auto-generated destructor stub
 }
